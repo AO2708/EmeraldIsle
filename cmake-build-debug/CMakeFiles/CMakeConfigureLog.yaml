@@ -452,3 +452,112 @@ events:
       Running the CXX compiler's linker: "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/mingw/bin/ld.exe" "-v"
       GNU ld (GNU Binutils) 2.40
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckCSourceCompiles.cmake:52 (cmake_check_source_compiles)"
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/FindThreads.cmake:97 (CHECK_C_SOURCE_COMPILES)"
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "external/glfw-3.1.2/CMakeLists.txt:95 (find_package)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-buu76d"
+      binary: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-buu76d"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/external/glfw-3.1.2/CMake/modules"
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-buu76d'
+        
+        Run Build Command(s): "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/ninja/win/x64/ninja.exe" -v cmTC_5cda3
+        [1/2] C:\\Users\\apita\\AppData\\Local\\JETBRA~1\\CLION2~1.2\\bin\\mingw\\bin\\gcc.exe -DCMAKE_HAVE_LIBC_PTHREAD  -fdiagnostics-color=always -o CMakeFiles/cmTC_5cda3.dir/src.c.obj -c "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-buu76d/src.c"
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\apita\\AppData\\Local\\JETBRA~1\\CLION2~1.2\\bin\\mingw\\bin\\gcc.exe   CMakeFiles/cmTC_5cda3.dir/src.c.obj -o cmTC_5cda3.exe -Wl,--out-implib,libcmTC_5cda3.dll.a -Wl,--major-image-version,0,--minor-image-version,0  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "external/glfw-3.1.2/CMakeLists.txt:144 (check_c_compiler_flag)"
+    checks:
+      - "Performing Test _GLFW_HAS_DEP"
+    directories:
+      source: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-anxygs"
+      binary: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-anxygs"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/external/glfw-3.1.2/CMake/modules"
+    buildResult:
+      variable: "_GLFW_HAS_DEP"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-anxygs'
+        
+        Run Build Command(s): "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/ninja/win/x64/ninja.exe" -v cmTC_b5969
+        [1/2] C:\\Users\\apita\\AppData\\Local\\JETBRA~1\\CLION2~1.2\\bin\\mingw\\bin\\gcc.exe -D_GLFW_HAS_DEP  -Wl,--nxcompat -fdiagnostics-color=always -o CMakeFiles/cmTC_b5969.dir/src.c.obj -c "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-anxygs/src.c"
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\apita\\AppData\\Local\\JETBRA~1\\CLION2~1.2\\bin\\mingw\\bin\\gcc.exe -Wl,--nxcompat  CMakeFiles/cmTC_b5969.dir/src.c.obj -o cmTC_b5969.exe -Wl,--out-implib,libcmTC_b5969.dll.a -Wl,--major-image-version,0,--minor-image-version,0  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "external/glfw-3.1.2/CMakeLists.txt:151 (check_c_compiler_flag)"
+    checks:
+      - "Performing Test _GLFW_HAS_ASLR"
+    directories:
+      source: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-mnylkc"
+      binary: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-mnylkc"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/external/glfw-3.1.2/CMake/modules"
+    buildResult:
+      variable: "_GLFW_HAS_ASLR"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-mnylkc'
+        
+        Run Build Command(s): "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/ninja/win/x64/ninja.exe" -v cmTC_403f5
+        [1/2] C:\\Users\\apita\\AppData\\Local\\JETBRA~1\\CLION2~1.2\\bin\\mingw\\bin\\gcc.exe -D_GLFW_HAS_ASLR  -Wl,--dynamicbase -fdiagnostics-color=always -o CMakeFiles/cmTC_403f5.dir/src.c.obj -c "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-mnylkc/src.c"
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\apita\\AppData\\Local\\JETBRA~1\\CLION2~1.2\\bin\\mingw\\bin\\gcc.exe -Wl,--dynamicbase  CMakeFiles/cmTC_403f5.dir/src.c.obj -o cmTC_403f5.exe -Wl,--out-implib,libcmTC_403f5.dll.a -Wl,--major-image-version,0,--minor-image-version,0  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/cmake/win/x64/share/cmake-3.30/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "external/glfw-3.1.2/CMakeLists.txt:158 (check_c_compiler_flag)"
+    checks:
+      - "Performing Test _GLFW_HAS_64ASLR"
+    directories:
+      source: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-w48nag"
+      binary: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-w48nag"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/external/glfw-3.1.2/CMake/modules"
+    buildResult:
+      variable: "_GLFW_HAS_64ASLR"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-w48nag'
+        
+        Run Build Command(s): "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/ninja/win/x64/ninja.exe" -v cmTC_62444
+        [1/2] C:\\Users\\apita\\AppData\\Local\\JETBRA~1\\CLION2~1.2\\bin\\mingw\\bin\\gcc.exe -D_GLFW_HAS_64ASLR  -Wl,--high-entropy-va -fdiagnostics-color=always -o CMakeFiles/cmTC_62444.dir/src.c.obj -c "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-w48nag/src.c"
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\apita\\AppData\\Local\\JETBRA~1\\CLION2~1.2\\bin\\mingw\\bin\\gcc.exe -Wl,--high-entropy-va  CMakeFiles/cmTC_62444.dir/src.c.obj -o cmTC_62444.exe -Wl,--out-implib,libcmTC_62444.dll.a -Wl,--major-image-version,0,--minor-image-version,0  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 && cd ."
+        
+      exitCode: 0
+...
