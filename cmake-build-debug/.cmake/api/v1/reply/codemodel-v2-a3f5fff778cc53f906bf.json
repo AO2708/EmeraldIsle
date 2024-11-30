@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "EmeraldIsle",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "EmeraldIsle::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-EmeraldIsle-Debug-7771fb5ecfa53d62ad1a.json",
+					"name" : "EmeraldIsle",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/cmake-build-debug",
+		"source" : "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
