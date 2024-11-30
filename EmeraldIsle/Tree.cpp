@@ -17,7 +17,6 @@ void Tree::initialize() {
     glGenBuffers(1, &colorBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, colorBufferID);
     glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
-    std::cout << sizeof(colors) << std::endl;
 
     /*glGenBuffers(1, &normalBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
@@ -26,7 +25,6 @@ void Tree::initialize() {
     glGenBuffers(1, &indexBufferID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
-    std::cout << sizeof(indices) << std::endl;
 
     programID = LoadShadersFromFile("../EmeraldIsle/shader/tree.vert", "../EmeraldIsle/shader/tree.frag");
     if (programID == 0) {
@@ -116,10 +114,6 @@ void Tree::loadOBJ(const std::string &path,
         }
     }
     std::cout << "OBJ FILE LOADED" << std::endl;
-    std::cout << "Vertices: " << vertices.size() << std::endl;
-    std::cout << "Normals: " << normals.size() << std::endl;
-    std::cout << "Colors: " << colors.size() << std::endl;
-    std::cout << "Indices: " << indices.size() << std::endl;
 }
 
 
