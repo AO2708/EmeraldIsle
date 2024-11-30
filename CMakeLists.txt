@@ -20,6 +20,7 @@ include_directories(
 add_executable(main
         EmeraldIsle/main.cpp
         EmeraldIsle/render/shader.cpp
+        EmeraldIsle/Tree.cpp
 )
 
 target_link_libraries(main
