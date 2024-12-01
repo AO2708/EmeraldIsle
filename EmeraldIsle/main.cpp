@@ -5,7 +5,6 @@
 
 #include <render/shader.h>
 
-#include <vector>
 #include <iostream>
 #define _USE_MATH_DEFINES
 

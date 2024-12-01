@@ -13,16 +13,8 @@
 #include <render/shader.h>
 
 #include <vector>
-#include <iostream>
-#include <fstream>
-#include <sstream>
+#include <loader/LoaderObj.h>
 
-struct Vertex {
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec2 texcoord;
-    glm::vec3 color;
-};
 
 struct Tree {
     GLuint vertexArrayID;
@@ -44,12 +36,6 @@ struct Tree {
     std::vector<GLuint> indices;
 
     void initialize();
-
-    void loadOBJ(const std::string &path,
-                std::vector<GLfloat> &vertices,
-                std::vector<GLfloat> &normals,
-                std::vector<GLfloat> &colors,
-                std::vector<GLuint> &indices);
 
     void render(glm::mat4);
 
