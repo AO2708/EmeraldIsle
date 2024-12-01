@@ -5,6 +5,9 @@
 #include "Tree.h"
 
 void Tree::initialize() {
+    vertices.resize(4104);
+    normals.resize(4104);
+    colors.resize(4104);
     LoaderObj loader;
     loader.loadOBJ("../EmeraldIsle/model/pine.obj", vertices, normals,colors,indices,"../EmeraldIsle/model/pine.mtl");
 
