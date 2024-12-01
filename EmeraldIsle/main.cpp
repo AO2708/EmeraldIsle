@@ -28,6 +28,13 @@ static float viewAzimuth = 0.0f;
 static float viewPolar = 0.0f;
 static float viewDistance = glm::length(eye_center - lookat);
 
+// Lighting control
+const glm::vec3 wave500(0.0f, 255.0f, 146.0f);
+const glm::vec3 wave600(255.0f, 190.0f, 0.0f);
+const glm::vec3 wave700(205.0f, 0.0f, 0.0f);
+const glm::vec3 lightIntensity = 10000.0f * (8.0f * wave500 + 15.6f * wave600 + 18.4f * wave700);
+const glm::vec3 lightPosition(-275.0f, 500.0f, -275.0f);
+
 struct AxisXYZ {
     // A structure for visualizing the global 3D coordinate system
 
@@ -84,7 +91,7 @@ struct AxisXYZ {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(color_buffer_data), color_buffer_data, GL_STATIC_DRAW);
 
 		// Create and compile our GLSL program from the shaders
-		programID = LoadShadersFromFile("../EmeraldIsle/shader/tree.vert", "../EmeraldIsle/shader/tree.frag");
+		programID = LoadShadersFromFile("../EmeraldIsle/shader/axis.vert", "../EmeraldIsle/shader/axis.frag");
 		if (programID == 0)
 		{
 			std::cerr << "Failed to load shaders." << std::endl;

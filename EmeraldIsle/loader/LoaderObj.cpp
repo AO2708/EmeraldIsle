@@ -140,8 +140,7 @@ void LoaderObj::loadOBJ(const std::string &pathObj,
         }
     }
     std::cout << "OBJ FILE LOADED" << std::endl;
-    std::cout << "Vertices: " << vertices.size() << std::endl;
-    std::cout << "Normals: " << normals.size() << std::endl;
-    std::cout << "Colors: " << colors.size() << std::endl;
-    std::cout << "Indices: " << indices.size() << std::endl;
+    for (GLuint i = 0; i < vertices.size(); i++) {
+        std::cout << "normals[" << i << "] = " << vertices[i] << std::endl;
+    }
 }

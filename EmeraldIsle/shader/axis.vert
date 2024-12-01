@@ -7,15 +7,10 @@ layout(location = 2) in vec3 vertexNormal;
 
 uniform mat4 MVP;
 
-out vec3 color;
-out vec3 worldPosition;
-out vec3 worldNormal;
+out vec3 finalColor;
 
 void main() {
     // Transform vertex
     gl_Position =  MVP * vec4(vertexPosition, 1.0);
-    color = vertexColor;
-
-    worldPosition = vertexPosition;
-    worldNormal = vertexNormal;
+    finalColor = vertexColor;
 }
