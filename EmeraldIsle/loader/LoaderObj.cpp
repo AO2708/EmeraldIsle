@@ -68,6 +68,7 @@ void LoaderObj::loadOBJ(const std::string &pathObj,
     GLuint insertionIndex;
     std::string temp_str;
     glm::vec3 actualColor;
+    int indexVertices = 0;
 
     if (!file.is_open()) {
         throw "ERROR::OBJLOADER::Could not open file";
@@ -108,20 +109,21 @@ void LoaderObj::loadOBJ(const std::string &pathObj,
             int counter = 0;
             while (ss >> temp_gluint) {
                 if (counter == 0) {
-                    indices.push_back(temp_gluint-1);
+                    indices.push_back(indexVertices/3);
                     insertionIndex = (temp_gluint-1)*3;
-                    vertices[insertionIndex] = temp_vertices[insertionIndex];
-                    vertices[insertionIndex+1] = temp_vertices[insertionIndex+1];
-                    vertices[insertionIndex+2] = temp_vertices[insertionIndex+2];
-                    colors[insertionIndex] = actualColor.x;
-                    colors[insertionIndex+1] = actualColor.y;
-                    colors[insertionIndex+2] = actualColor.z;
+                    vertices[indexVertices] = temp_vertices[insertionIndex];
+                    vertices[indexVertices+1] = temp_vertices[insertionIndex+1];
+                    vertices[indexVertices+2] = temp_vertices[insertionIndex+2];
+                    colors[indexVertices] = actualColor.x;
+                    colors[indexVertices+1] = actualColor.y;
+                    colors[indexVertices+2] = actualColor.z;
                 } else if (counter == 1) {
                     // if needed texture
                 } else if (counter == 2) {
-                    normals[insertionIndex] = temp_normals[(temp_gluint-1)*3];
-                    normals[insertionIndex+1] = temp_normals[(temp_gluint-1)*3+1];
-                    normals[insertionIndex+2] = temp_normals[(temp_gluint-1)*3+2];
+                    normals[indexVertices] = temp_normals[(temp_gluint-1)*3];
+                    normals[indexVertices+1] = temp_normals[(temp_gluint-1)*3+1];
+                    normals[indexVertices+2] = temp_normals[(temp_gluint-1)*3+2];
+                    indexVertices = indexVertices+3;
                 }
                 if (ss.peek() == '/') {
                     ++counter;
@@ -140,7 +142,4 @@ void LoaderObj::loadOBJ(const std::string &pathObj,
         }
     }
     std::cout << "OBJ FILE LOADED" << std::endl;
-    for (GLuint i = 0; i < vertices.size(); i++) {
-        std::cout << "normals[" << i << "] = " << vertices[i] << std::endl;
-    }
 }
