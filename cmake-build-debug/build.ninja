@@ -70,6 +70,13 @@ build CMakeFiles/main.dir/EmeraldIsle/Tree.cpp.obj: CXX_COMPILER__main_unscanned
   OBJECT_DIR = CMakeFiles\main.dir
   OBJECT_FILE_DIR = CMakeFiles\main.dir\EmeraldIsle
 
+build CMakeFiles/main.dir/EmeraldIsle/loader/LoaderObj.cpp.obj: CXX_COMPILER__main_unscanned_Debug C$:/Users/apita/Documents/Mes$ documents/INSA$ 2024-2025/Semestre1/Computer$ Graphics/Project/EmeraldIsle/EmeraldIsle/loader/LoaderObj.cpp || cmake_object_order_depends_target_main
+  DEP_FILE = CMakeFiles\main.dir\EmeraldIsle\loader\LoaderObj.cpp.obj.d
+  FLAGS = -g -std=gnu++11 -fdiagnostics-color=always
+  INCLUDES = -I"C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/external/glfw-3.1.2/include" -I"C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/external/glm-0.9.7.1" -I"C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/external/glad-opengl-3.3/include" -I"C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/external/tinygltf-2.9.3" -I"C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/EmeraldIsle" -I"C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/external/glad-3.3/include"
+  OBJECT_DIR = CMakeFiles\main.dir
+  OBJECT_FILE_DIR = CMakeFiles\main.dir\EmeraldIsle\loader
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target main
@@ -78,7 +85,7 @@ build CMakeFiles/main.dir/EmeraldIsle/Tree.cpp.obj: CXX_COMPILER__main_unscanned
 #############################################
 # Link the executable main.exe
 
-build main.exe: CXX_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/EmeraldIsle/main.cpp.obj CMakeFiles/main.dir/EmeraldIsle/render/shader.cpp.obj CMakeFiles/main.dir/EmeraldIsle/Tree.cpp.obj | glfw3dll.a libglad.dll.a || glfw3.dll libglad.dll
+build main.exe: CXX_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/EmeraldIsle/main.cpp.obj CMakeFiles/main.dir/EmeraldIsle/render/shader.cpp.obj CMakeFiles/main.dir/EmeraldIsle/Tree.cpp.obj CMakeFiles/main.dir/EmeraldIsle/loader/LoaderObj.cpp.obj | glfw3dll.a libglad.dll.a || glfw3.dll libglad.dll
   FLAGS = -g
   LINK_LIBRARIES = -lopengl32  -lglu32  glfw3dll.a  libglad.dll.a  -lopengl32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\main.dir
