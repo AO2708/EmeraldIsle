@@ -15,6 +15,8 @@
 #include <vector>
 #include <loader/LoaderObj.h>
 
+extern const glm::vec3 lightPosition;
+extern const glm::vec3 lightIntensity;
 
 struct Tree {
     GLuint vertexArrayID;

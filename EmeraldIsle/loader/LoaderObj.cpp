@@ -56,18 +56,19 @@ void LoaderObj::loadOBJ(const std::string &pathObj,
     }
 
     //Face vectors
-    std::vector<GLuint> vertex_normal_indicies;
-    std::vector<GLuint> vertex_texcoord_indicies;
+    std::vector<GLfloat> temp_vertices;
+    std::vector<GLfloat> temp_normals;
 
     std::stringstream ss;
     std::ifstream file(pathObj);
     std::string line;
     std::string prefix;
     glm::vec3 temp_vec3;
-    glm::vec2 temp_vec2;
     GLuint temp_gluint;
+    GLuint insertionIndex;
     std::string temp_str;
-    int counterVertex = 0;
+    glm::vec3 actualColor;
+    int indexVertices = 0;
 
     if (!file.is_open()) {
         throw "ERROR::OBJLOADER::Could not open file";
@@ -88,39 +89,41 @@ void LoaderObj::loadOBJ(const std::string &pathObj,
         } else if (prefix == "usemtl") {
             ss >> temp_str;
             if (fileMtl) {
-                temp_vec3 = materials[temp_str].colorDiffuse;
+                actualColor = materials[temp_str].colorDiffuse;
             } else {
-                temp_vec3 = glm::vec3(1.0f, 1.0f, 1.0f);
+                actualColor = glm::vec3(1.0f, 1.0f, 1.0f);
             }
-            for (int i = 0; i < counterVertex; i++) {
-                colors.push_back(temp_vec3.x);
-                colors.push_back(temp_vec3.y);
-                colors.push_back(temp_vec3.z);
-            }
-            counterVertex = 0;
         } else if (prefix == "v") {
-            counterVertex++;
             ss >> temp_vec3.x >> temp_vec3.y >> temp_vec3.z;
-            vertices.push_back(temp_vec3.x);
-            vertices.push_back(temp_vec3.y);
-            vertices.push_back(temp_vec3.z);
+            temp_vertices.push_back(temp_vec3.x);
+            temp_vertices.push_back(temp_vec3.y);
+            temp_vertices.push_back(temp_vec3.z);
         } else if (prefix == "vt") {
-            ss >> temp_vec2.x >> temp_vec2.y;
             //if needed texcoord
         } else if (prefix == "vn") {
             ss >> temp_vec3.x >> temp_vec3.y >> temp_vec3.z;
-            normals.push_back(temp_vec3.x);
-            normals.push_back(temp_vec3.y);
-            normals.push_back(temp_vec3.z);
+            temp_normals.push_back(temp_vec3.x);
+            temp_normals.push_back(temp_vec3.y);
+            temp_normals.push_back(temp_vec3.z);
         } else if (prefix == "f") {
             int counter = 0;
             while (ss >> temp_gluint) {
                 if (counter == 0) {
-                    indices.push_back(temp_gluint-1);
+                    indices.push_back(indexVertices/3);
+                    insertionIndex = (temp_gluint-1)*3;
+                    vertices[indexVertices] = temp_vertices[insertionIndex];
+                    vertices[indexVertices+1] = temp_vertices[insertionIndex+1];
+                    vertices[indexVertices+2] = temp_vertices[insertionIndex+2];
+                    colors[indexVertices] = actualColor.x;
+                    colors[indexVertices+1] = actualColor.y;
+                    colors[indexVertices+2] = actualColor.z;
                 } else if (counter == 1) {
-                    vertex_texcoord_indicies.push_back(temp_gluint);
+                    // if needed texture
                 } else if (counter == 2) {
-                    vertex_normal_indicies.push_back(temp_gluint);
+                    normals[indexVertices] = temp_normals[(temp_gluint-1)*3];
+                    normals[indexVertices+1] = temp_normals[(temp_gluint-1)*3+1];
+                    normals[indexVertices+2] = temp_normals[(temp_gluint-1)*3+2];
+                    indexVertices = indexVertices+3;
                 }
                 if (ss.peek() == '/') {
                     ++counter;

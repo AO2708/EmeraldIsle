@@ -5,6 +5,9 @@
 #include "Tree.h"
 
 void Tree::initialize() {
+    vertices.resize(4104);
+    normals.resize(4104);
+    colors.resize(4104);
     LoaderObj loader;
     loader.loadOBJ("../EmeraldIsle/model/pine.obj", vertices, normals,colors,indices,"../EmeraldIsle/model/pine.mtl");
 
@@ -19,10 +22,10 @@ void Tree::initialize() {
     glBindBuffer(GL_ARRAY_BUFFER, colorBufferID);
     glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
 
-    /*glGenBuffers(1, &normalBufferID);
+    glGenBuffers(1, &normalBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(normals), normals.data(), GL_STATIC_DRAW);
-    */
+    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(GLfloat), normals.data(), GL_STATIC_DRAW);
+
     glGenBuffers(1, &indexBufferID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
@@ -33,6 +36,8 @@ void Tree::initialize() {
     }
 
     mvpMatrixID = glGetUniformLocation(programID, "MVP");
+    lightPositionID = glGetUniformLocation(programID, "lightPosition");
+    lightIntensityID = glGetUniformLocation(programID, "lightIntensity");
 }
 
 void Tree::render(glm::mat4 cameraMatrix) {
@@ -46,14 +51,18 @@ void Tree::render(glm::mat4 cameraMatrix) {
     glBindBuffer(GL_ARRAY_BUFFER, colorBufferID);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-    /*glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(2);
     glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    */
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 
     glm::mat4 mvp = cameraMatrix;
     glUniformMatrix4fv(mvpMatrixID, 1, GL_FALSE, &mvp[0][0]);
+
+    // Set light data
+    glUniform3fv(lightPositionID, 1, &lightPosition[0]);
+    glUniform3fv(lightIntensityID, 1, &lightIntensity[0]);
 
     glDrawElements(
         GL_TRIANGLES,      // mode
@@ -64,7 +73,7 @@ void Tree::render(glm::mat4 cameraMatrix) {
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
-    //glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(2);
 }
 
 void Tree::cleanup() {
