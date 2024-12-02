@@ -7,6 +7,8 @@
 
 #include <iostream>
 #define _USE_MATH_DEFINES
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <../stb/stb_image_write.h>
 
 #include <Tree.h>
 
@@ -33,7 +35,40 @@ const glm::vec3 wave500(0.0f, 255.0f, 146.0f);
 const glm::vec3 wave600(255.0f, 190.0f, 0.0f);
 const glm::vec3 wave700(205.0f, 0.0f, 0.0f);
 const glm::vec3 lightIntensity = 10000.0f * (8.0f * wave500 + 15.6f * wave600 + 18.4f * wave700);
-const glm::vec3 lightPosition(-275.0f, 500.0f, -275.0f);
+const glm::vec3 lightPosition(-75.0f, 100.0f, -75.0f);
+
+// Shadow mapping
+static glm::vec3 lightUp = glm::normalize(glm::vec3(0.333, 0.333, 0.883));
+static glm::vec3 lightLookAt(0.0f, 0.0f, 0.0f);
+static int shadowMapWidth = 1024;
+static int shadowMapHeight = 1024;
+static float depthFoV = 100.0f;
+static float depthNear = 100.0f;
+static float depthFar = 500.0f;
+GLuint fbo;
+GLuint depthTexture;
+static bool saveDepth = false;
+
+static void saveDepthTexture(GLuint fbo, std::string filename) {
+	int width = shadowMapWidth;
+	int height = shadowMapHeight;
+	if (shadowMapWidth == 0 || shadowMapHeight == 0) {
+		width = windowWidth;
+		height = windowHeight;
+	}
+	int channels = 3;
+
+	std::vector<float> depth(width * height);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glReadBuffer(GL_DEPTH_COMPONENT);
+	glReadPixels(0, 0, width, height, GL_DEPTH_COMPONENT, GL_FLOAT, depth.data());
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	std::vector<unsigned char> img(width * height * 3);
+	for (int i = 0; i < width * height; ++i) img[3*i] = img[3*i+1] = img[3*i+2] = depth[i] * 255;
+	stbi_write_png(filename.c_str(), width, height, channels, img.data(), width * channels);
+}
+
 
 struct AxisXYZ {
     // A structure for visualizing the global 3D coordinate system
@@ -166,11 +201,34 @@ int main(void)
 		return -1;
 	}
 
+	// Prepare shadow map size for shadow mapping. Usually this is the size of the window itself, but on some platforms like Mac this can be 2x the size of the window. Use glfwGetFramebufferSize to get the shadow map size properly.
+	glfwGetFramebufferSize(window, &shadowMapWidth, &shadowMapHeight);
+
 	// Background
 	glClearColor(0.2f, 0.2f, 0.2f, 0.f);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+
+	// Create and bind the FBO
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	// Create the 2D texture that we will use as the framebuffer's depth buffer
+	glGenTextures(1,&depthTexture);
+	glBindTexture(GL_TEXTURE_2D, depthTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowMapWidth, shadowMapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// Attach depth texture to framebuffer's depth buffer
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		std::cerr << "Framebuffer is not complete!" << std::endl;
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	//Initialisation
 	Tree tree;
@@ -179,18 +237,40 @@ int main(void)
 	AxisXYZ axis;
 	axis.initialize();
 
+	// Camera setup for light
+	glm::mat4 viewMatrixLight, projectionMatrixLight;
+	projectionMatrixLight = glm::perspective(glm::radians(depthFoV), (float)shadowMapWidth / shadowMapHeight, depthNear, depthFar);
+
 	// Camera setup
 	glm::mat4 viewMatrix, projectionMatrix;
 	projectionMatrix = glm::perspective(glm::radians(FoV), (float)windowWidth / windowHeight, zNear, zFar);
 
 	do
 	{
+		// Render the depth map
+		glViewport(0,0,shadowMapWidth,shadowMapHeight);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		viewMatrixLight = glm::lookAt(lightPosition, lightLookAt, lightUp);
+		glm::mat4 vpLight = projectionMatrixLight * viewMatrixLight;
+
+		tree.renderShadow(vpLight);
+		if (saveDepth) {
+			std::string filename = "../EmeraldIsle/depth_camera.png";
+			saveDepthTexture(fbo, filename);
+			std::cout << "Depth texture saved to " << filename << std::endl;
+			saveDepth = false;
+		}
+		glBindFramebuffer(GL_FRAMEBUFFER,0);
+
+		// Render the scene
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		viewMatrix = glm::lookAt(eye_center, lookat, up);
 		glm::mat4 vp = projectionMatrix * viewMatrix;
 
-		tree.render(vp);
+		tree.render(vp, vpLight);
 		axis.render(vp);
 
 		// Swap buffers
@@ -201,6 +281,8 @@ int main(void)
 	while (!glfwWindowShouldClose(window));
 
 	// Clean up
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteTextures(1, &depthTexture);
 	tree.cleanup();
 	axis.cleanup();
 

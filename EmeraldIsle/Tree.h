@@ -17,6 +17,7 @@
 
 extern const glm::vec3 lightPosition;
 extern const glm::vec3 lightIntensity;
+extern GLuint depthTexture;
 
 struct Tree {
     GLuint vertexArrayID;
@@ -39,7 +40,9 @@ struct Tree {
 
     void initialize();
 
-    void render(glm::mat4);
+    void render(glm::mat4, glm::mat4);
+
+    void renderShadow(glm::mat4);
 
     void cleanup();
 };
