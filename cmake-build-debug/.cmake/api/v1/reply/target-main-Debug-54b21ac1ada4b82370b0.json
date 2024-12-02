@@ -199,7 +199,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "EmeraldIsle/Tree.cpp",
+			"path" : "EmeraldIsle/features/Tree.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -211,7 +211,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "EmeraldIsle/Island.cpp",
+			"path" : "EmeraldIsle/features/Island.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

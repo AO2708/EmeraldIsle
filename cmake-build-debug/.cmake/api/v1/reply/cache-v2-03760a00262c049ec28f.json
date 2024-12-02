@@ -711,7 +711,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "C:/Users/apita/AppData/Local/JetBrains/CLion 2024.2.2/bin/ninja/win/x64/ninja.exe"
+			"value" : "C:/Users/apita/AppData/Local/JETBRA~1/CLION2~1.2/bin/ninja/win/x64/ninja.exe"
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS",

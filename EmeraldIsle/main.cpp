@@ -10,8 +10,8 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <../stb/stb_image_write.h>
 
-#include <Tree.h>
-#include <Island.h>
+#include <features/Tree.h>
+#include <features/Island.h>
 
 static GLFWwindow *window;
 static int windowWidth = 1024;
