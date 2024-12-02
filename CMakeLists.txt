@@ -21,9 +21,9 @@ include_directories(
 add_executable(main
         EmeraldIsle/main.cpp
         EmeraldIsle/render/shader.cpp
-        EmeraldIsle/Tree.cpp
+        EmeraldIsle/features/Tree.cpp
         EmeraldIsle/loader/LoaderObj.cpp
-        EmeraldIsle/Island.cpp
+        EmeraldIsle/features/Island.cpp
 )
 
 target_link_libraries(main
