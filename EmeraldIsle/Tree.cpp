@@ -4,6 +4,11 @@
 
 #include "Tree.h"
 
+#include <loader/LoaderObj.h>
+#include <loader/LoaderObj.h>
+#include <loader/LoaderObj.h>
+#include <loader/LoaderObj.h>
+
 void Tree::initialize() {
     vertices.resize(4104);
     normals.resize(4104);
@@ -35,12 +40,18 @@ void Tree::initialize() {
         std::cerr << "Erreur : Impossible de charger les shaders 'tree'" << std::endl;
     }
 
+    shadowProgramID = LoadShadersFromFile("../EmeraldIsle/shader/shadowMapping.vert", "../EmeraldIsle/shader/shadowMapping.frag");
+    if (shadowProgramID == 0) {
+        std::cerr << "Erreur : Impossible de charger les shaders 'shadow'" << std::endl;
+    }
+
     mvpMatrixID = glGetUniformLocation(programID, "MVP");
     lightPositionID = glGetUniformLocation(programID, "lightPosition");
     lightIntensityID = glGetUniformLocation(programID, "lightIntensity");
+    mvpLightMatrixID = glGetUniformLocation(shadowProgramID, "MVPLight");
 }
 
-void Tree::render(glm::mat4 cameraMatrix) {
+void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glUseProgram(programID);
 
     glEnableVertexAttribArray(0);
@@ -57,8 +68,15 @@ void Tree::render(glm::mat4 cameraMatrix) {
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+    glUniform1i(glGetUniformLocation(programID,"shadowTexture"), 0);
+
     glm::mat4 mvp = cameraMatrix;
     glUniformMatrix4fv(mvpMatrixID, 1, GL_FALSE, &mvp[0][0]);
+
+    glm::mat4 mvpLight = lightMatrix;
+    glUniformMatrix4fv(glGetUniformLocation(programID, "MVPLight"), 1, GL_FALSE, &mvpLight[0][0]);
 
     // Set light data
     glUniform3fv(lightPositionID, 1, &lightPosition[0]);
@@ -74,6 +92,30 @@ void Tree::render(glm::mat4 cameraMatrix) {
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
+}
+
+void Tree::renderShadow(glm::mat4 lightMatrix) {
+    glUseProgram(shadowProgramID);
+
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+
+    // Set model-view-projection matrix
+    glm::mat4 mvp = lightMatrix;
+    glUniformMatrix4fv(mvpLightMatrixID, 1, GL_FALSE, &mvp[0][0]);
+
+    // Draw the box
+    glDrawElements(
+        GL_TRIANGLES,      // mode
+        1368,    			   // number of indices
+        GL_UNSIGNED_INT,   // type
+        (void*)0           // element array buffer offset
+    );
+
+    glDisableVertexAttribArray(0);
 }
 
 void Tree::cleanup() {

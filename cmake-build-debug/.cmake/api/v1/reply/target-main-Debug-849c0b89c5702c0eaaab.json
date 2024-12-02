@@ -29,13 +29,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 20,
+				"line" : 21,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 27,
+				"line" : 28,
 				"parent" : 0
 			},
 			{
@@ -72,6 +72,10 @@
 				{
 					"backtrace" : 3,
 					"path" : "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/external/tinygltf-2.9.3"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "C:/Users/apita/Documents/Mes documents/INSA 2024-2025/Semestre1/Computer Graphics/Project/EmeraldIsle/external"
 				},
 				{
 					"backtrace" : 3,
