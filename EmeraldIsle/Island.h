@@ -1,9 +1,9 @@
 //
-// Created by apita on 30/11/2024.
+// Created by apita on 02/12/2024.
 //
 
-#ifndef TREE_H
-#define TREE_H
+#ifndef ISLAND_H
+#define ISLAND_H
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -19,7 +19,7 @@ extern const glm::vec3 lightPosition;
 extern const glm::vec3 lightIntensity;
 extern GLuint depthTexture;
 
-struct Tree {
+struct Island {
     glm::vec3 position;
     glm::vec3 scale;
 
@@ -51,5 +51,4 @@ struct Tree {
 };
 
 
-
-#endif //TREE_H
+#endif //ISLAND_H

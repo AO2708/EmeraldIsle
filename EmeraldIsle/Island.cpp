@@ -1,22 +1,18 @@
 //
-// Created by apita on 30/11/2024.
+// Created by apita on 02/12/2024.
 //
-
-#include "Tree.h"
-
-#include <loader/LoaderObj.h>
 
 #include "Island.h"
 
-void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
+void Island::initialize(glm::vec3 position, glm::vec3 scale) {
     this->position = position;
     this->scale = scale;
 
-    vertices.resize(4104);
-    normals.resize(4104);
-    colors.resize(4104);
+    vertices.resize(17298);
+    normals.resize(17298);
+    colors.resize(17298);
     LoaderObj loader;
-    loader.loadOBJ("../EmeraldIsle/model/pine.obj", vertices, normals,colors,indices,"../EmeraldIsle/model/pine.mtl");
+    loader.loadOBJ("../EmeraldIsle/model/island.obj", vertices, normals,colors,indices,"../EmeraldIsle/model/island.mtl");
 
     glGenVertexArrays(1, &vertexArrayID);
     glBindVertexArray(vertexArrayID);
@@ -37,7 +33,7 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
-    programID = LoadShadersFromFile("../EmeraldIsle/shader/tree.vert", "../EmeraldIsle/shader/tree.frag");
+    programID = LoadShadersFromFile("../EmeraldIsle/shader/island.vert", "../EmeraldIsle/shader/island.frag");
     if (programID == 0) {
         std::cerr << "Erreur : Impossible de charger les shaders 'tree'" << std::endl;
     }
@@ -53,7 +49,7 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
     mvpLightMatrixID = glGetUniformLocation(shadowProgramID, "MVPLight");
 }
 
-void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
+void Island::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glUseProgram(programID);
 
     glEnableVertexAttribArray(0);
@@ -74,10 +70,15 @@ void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glBindTexture(GL_TEXTURE_2D, depthTexture);
     glUniform1i(glGetUniformLocation(programID,"shadowTexture"), 0);
 
-    glm::mat4 mvp = cameraMatrix;
+    glm::mat4 modelMatrix = glm::mat4();
+    // Scale the box along each axis to make it look like a building
+    modelMatrix = glm::translate(modelMatrix, position);
+    modelMatrix = glm::scale(modelMatrix, scale);
+
+    glm::mat4 mvp = cameraMatrix * modelMatrix;
     glUniformMatrix4fv(mvpMatrixID, 1, GL_FALSE, &mvp[0][0]);
 
-    glm::mat4 mvpLight = lightMatrix;
+    glm::mat4 mvpLight = lightMatrix * modelMatrix;
     glUniformMatrix4fv(glGetUniformLocation(programID, "MVPLight"), 1, GL_FALSE, &mvpLight[0][0]);
 
     // Set light data
@@ -86,7 +87,7 @@ void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
 
     glDrawElements(
         GL_TRIANGLES,      // mode
-        1368,              // number of indices
+        5766,              // number of indices
         GL_UNSIGNED_INT,   // type
         (void*)0           // element array buffer offset
     );
@@ -96,7 +97,7 @@ void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glDisableVertexAttribArray(2);
 }
 
-void Tree::renderShadow(glm::mat4 lightMatrix) {
+void Island::renderShadow(glm::mat4 lightMatrix) {
     glUseProgram(shadowProgramID);
 
     glEnableVertexAttribArray(0);
@@ -106,7 +107,11 @@ void Tree::renderShadow(glm::mat4 lightMatrix) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 
     // Set model-view-projection matrix
-    glm::mat4 mvp = lightMatrix;
+    glm::mat4 modelMatrix = glm::mat4();
+    // Scale the box along each axis to make it look like a building
+    modelMatrix = glm::translate(modelMatrix, position);
+    modelMatrix = glm::scale(modelMatrix, scale);
+    glm::mat4 mvp = lightMatrix * modelMatrix;
     glUniformMatrix4fv(mvpLightMatrixID, 1, GL_FALSE, &mvp[0][0]);
 
     // Draw the box
@@ -120,7 +125,7 @@ void Tree::renderShadow(glm::mat4 lightMatrix) {
     glDisableVertexAttribArray(0);
 }
 
-void Tree::cleanup() {
+void Island::cleanup() {
     glDeleteBuffers(1, &vertexBufferID);
     glDeleteBuffers(1, &colorBufferID);
     glDeleteBuffers(1, &indexBufferID);
@@ -129,4 +134,3 @@ void Tree::cleanup() {
     glDeleteProgram(programID);
     glDeleteProgram(shadowProgramID);
 }
-
