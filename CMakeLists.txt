@@ -23,6 +23,7 @@ add_executable(main
         EmeraldIsle/render/shader.cpp
         EmeraldIsle/Tree.cpp
         EmeraldIsle/loader/LoaderObj.cpp
+        EmeraldIsle/Island.cpp
 )
 
 target_link_libraries(main
