@@ -17,9 +17,10 @@ static GLFWwindow *window;
 static int windowWidth = 1024;
 static int windowHeight = 768;
 static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
+static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 // OpenGL camera view parameters
-static glm::vec3 eye_center(30.0f, 30.0f, 30.0f);
+static glm::vec3 eye_center(0.0f, 30.0f, 30.0f);
 static glm::vec3 lookat(0, 0, 0);
 static glm::vec3 up(0, 1, 0);
 static float FoV = 50.0f;
@@ -27,8 +28,8 @@ static float zNear = 1.0f;
 static float zFar = 500.0f;
 
 // View control
-static float viewAzimuth = 0.0f;
-static float viewPolar = 0.0f;
+static float viewAzimuth = -glm::pi<float>()/2;
+static float viewPolar = -glm::pi<float>() / 4;
 static float viewDistance = glm::length(eye_center - lookat);
 
 // Lighting control
@@ -193,6 +194,7 @@ int main(void)
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
 	// Load OpenGL functions, gladLoadGL returns the loaded version, 0 on error.
 	int version = gladLoadGL(glfwGetProcAddress);
@@ -301,37 +303,84 @@ int main(void)
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
+	float moveSpeed = 1.0f;
 	if (key == GLFW_KEY_R && action == GLFW_PRESS)
 	{
+		eye_center = glm::vec3(0.0f, 30.0f, 30.0f);
+		lookat = glm::vec3(0, 0, 0);
+		viewAzimuth = -glm::pi<float>()/2;
+		viewPolar = -glm::pi<float>() / 4;
 		std::cout << "Reset." << std::endl;
 	}
 
+	// Moving
+	if (key == GLFW_KEY_S && (action == GLFW_REPEAT || action == GLFW_PRESS)) {
+		glm::vec3 direction = normalize(lookat - eye_center);
+		eye_center -= moveSpeed * direction;
+		lookat -= moveSpeed * direction;
+	}
+	if (key == GLFW_KEY_W && (action == GLFW_REPEAT || action == GLFW_PRESS)) {
+		glm::vec3 direction = normalize(lookat - eye_center);
+		eye_center += moveSpeed * direction;
+		lookat += moveSpeed * direction;
+	}
+	if (key == GLFW_KEY_A && (action == GLFW_REPEAT || action == GLFW_PRESS)) {
+		glm::vec3 direction = normalize(lookat - eye_center);
+		glm::vec3 right = normalize(cross(direction, up));
+		eye_center -= moveSpeed * right;
+		lookat -= moveSpeed * right;
+	}
+	if (key == GLFW_KEY_D && (action == GLFW_REPEAT || action == GLFW_PRESS)) {
+		glm::vec3 direction = normalize(lookat - eye_center);
+		glm::vec3 right = normalize(cross(direction, up));
+		eye_center += moveSpeed * right;
+		lookat += moveSpeed * right;
+	}
+
+	// Rotation
 	if (key == GLFW_KEY_UP && (action == GLFW_REPEAT || action == GLFW_PRESS))
 	{
-		viewPolar -= 0.1f;
-		eye_center.y = viewDistance * cos(viewPolar);
+		viewPolar += 0.1f;
+		lookat.y = eye_center.y + viewDistance * sin(viewPolar);
+		lookat.x = eye_center.x + viewDistance * cos(viewPolar) * cos(viewAzimuth);
+		lookat.z = eye_center.z + viewDistance * cos(viewPolar) * sin(viewAzimuth);
 	}
 
 	if (key == GLFW_KEY_DOWN && (action == GLFW_REPEAT || action == GLFW_PRESS))
 	{
-		viewPolar += 0.1f;
-		eye_center.y = viewDistance * cos(viewPolar);
+		viewPolar -= 0.1f;
+		lookat.y = eye_center.y + viewDistance * sin(viewPolar);
+		lookat.x = eye_center.x + viewDistance * cos(viewPolar) * cos(viewAzimuth);
+		lookat.z = eye_center.z + viewDistance * cos(viewPolar) * sin(viewAzimuth);
 	}
 
 	if (key == GLFW_KEY_LEFT && (action == GLFW_REPEAT || action == GLFW_PRESS))
 	{
 		viewAzimuth -= 0.1f;
-		eye_center.x = viewDistance * cos(viewAzimuth);
-		eye_center.z = viewDistance * sin(viewAzimuth);
+		lookat.y = eye_center.y + viewDistance * sin(viewPolar);
+		lookat.x = eye_center.x + viewDistance * cos(viewPolar) * cos(viewAzimuth);
+		lookat.z = eye_center.z + viewDistance * cos(viewPolar) * sin(viewAzimuth);
 	}
 
 	if (key == GLFW_KEY_RIGHT && (action == GLFW_REPEAT || action == GLFW_PRESS))
 	{
 		viewAzimuth += 0.1f;
-		eye_center.x = viewDistance * cos(viewAzimuth);
-		eye_center.z = viewDistance * sin(viewAzimuth);
+		lookat.y = eye_center.y + viewDistance * sin(viewPolar);
+		lookat.x = eye_center.x + viewDistance * cos(viewPolar) * cos(viewAzimuth);
+		lookat.z = eye_center.z + viewDistance * cos(viewPolar) * sin(viewAzimuth);
 	}
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+	if (yoffset > 0) {
+		eye_center.y += 1.0;
+		lookat.y += 1.0;
+	}
+	if (yoffset < 0) {
+		eye_center.y -= 1.0;
+		lookat.y -= 1.0;
+	}
 }
