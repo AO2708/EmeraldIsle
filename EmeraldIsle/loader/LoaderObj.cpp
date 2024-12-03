@@ -278,9 +278,6 @@ void LoaderObj::loadOBJ(const std::string &pathObj,
 
         }
     }
-    std::cout << temp_texCoords.size() << std::endl;
-    std::cout << temp_normals.size() << std::endl;
-    std::cout << temp_vertices.size() << std::endl;
     std::cout << "OBJ FILE LOADED" << std::endl;
 }
 

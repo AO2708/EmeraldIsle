@@ -22,16 +22,16 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
 static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 // OpenGL camera view parameters
-static glm::vec3 eye_center(0.0f, 30.0f, 30.0f);
-static glm::vec3 lookat(0, 0, 0);
+static glm::vec3 eye_center(20.0,1.5,-55.0);
+static glm::vec3 lookat(0, 15, 0);
 static glm::vec3 up(0, 1, 0);
 static float FoV = 50.0f;
 static float zNear = 1.0f;
 static float zFar = 500.0f;
 
 // View control
-static float viewAzimuth = -glm::pi<float>()/2;
-static float viewPolar = -glm::pi<float>() / 4;
+static float viewAzimuth = 1.92;
+static float viewPolar = 0.23;
 static float viewDistance = glm::length(eye_center - lookat);
 
 // Lighting control
@@ -237,16 +237,16 @@ int main(void)
 
 	//Initialisation
 	Tree tree;
-	tree.initialize(glm::vec3(0.0,0.0,0.0), glm::vec3(1.0,1.0,1.0));
+	tree.initialize(glm::vec3(-20.0,0.0,38.0), glm::vec3(0.5,0.5,0.5));
 
 	AxisXYZ axis;
 	axis.initialize();
 
 	Pannel pannel;
-	pannel.initialize(glm::vec3(0.0,0.0,0.0), glm::vec3(1.0,1.0,1.0));
+	pannel.initialize(glm::vec3(20.0,-0.2,-48.0), glm::vec3(1.0,1.0,1.0), glm::radians(235.0f));
 
 	Island island;
-	island.initialize(glm::vec3(0.0,0.0,0.0), glm::vec3(2.0,2.0,2.0));
+	island.initialize(glm::vec3(0.0,0.0,0.0), glm::vec3(5.0,5.0,5.0));
 
 	// Camera setup for light
 	glm::mat4 viewMatrixLight, projectionMatrixLight;
@@ -314,10 +314,10 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 	float moveSpeed = 1.0f;
 	if (key == GLFW_KEY_R && action == GLFW_PRESS)
 	{
-		eye_center = glm::vec3(0.0f, 30.0f, 30.0f);
-		lookat = glm::vec3(0, 0, 0);
-		viewAzimuth = -glm::pi<float>()/2;
-		viewPolar = -glm::pi<float>() / 4;
+		eye_center = glm::vec3(20.0,1.5,-55.0);
+		lookat = glm::vec3(0, 15, 0);
+		viewAzimuth = 1.92;
+		viewPolar = 0.23;
 		std::cout << "Reset." << std::endl;
 	}
 

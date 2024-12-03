@@ -7,7 +7,8 @@ layout(location = 2) in vec3 vertexNormal;
 layout(location = 3) in vec2 vertexUV;
 layout(location = 4) in int vertexIsTextured;
 
-uniform mat4 MVP;
+uniform mat4 VP;
+uniform mat4 modelMatrix;
 uniform mat4 MVPLight;
 
 out vec3 color;
@@ -19,13 +20,12 @@ out vec4 fragPosLightSpace;
 
 void main() {
     // Transform vertex
-    gl_Position =  MVP * vec4(vertexPosition, 1.0);
+    gl_Position =  VP * modelMatrix * vec4(vertexPosition, 1.0);
     color = vertexColor;
     isTextured = vertexIsTextured;
 
     uv = vec2(vertexUV.x,1.0-vertexUV.y);
-    worldPosition = vertexPosition;
-    worldNormal = vertexNormal;
-
+    worldPosition = vec3(modelMatrix * vec4(vertexPosition, 1.0));
+    worldNormal = mat3(transpose(inverse(modelMatrix))) * vertexNormal;
     fragPosLightSpace = MVPLight * vec4(vertexPosition, 1.0);
 }

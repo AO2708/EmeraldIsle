@@ -45,7 +45,8 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
         std::cerr << "Erreur : Impossible de charger les shaders 'shadow'" << std::endl;
     }
 
-    mvpMatrixID = glGetUniformLocation(programID, "MVP");
+    vpMatrixID = glGetUniformLocation(programID, "VP");
+    modelMatrixID = glGetUniformLocation(programID, "modelMatrix");
     lightPositionID = glGetUniformLocation(programID, "lightPosition");
     lightIntensityID = glGetUniformLocation(programID, "lightIntensity");
     mvpLightMatrixID = glGetUniformLocation(shadowProgramID, "MVPLight");
@@ -72,8 +73,12 @@ void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glBindTexture(GL_TEXTURE_2D, depthTexture);
     glUniform1i(glGetUniformLocation(programID,"shadowTexture"), 0);
 
-    glm::mat4 mvp = cameraMatrix;
-    glUniformMatrix4fv(mvpMatrixID, 1, GL_FALSE, &mvp[0][0]);
+    glm::mat4 modelMatrix = glm::mat4();
+    modelMatrix = glm::translate(modelMatrix, position);
+    modelMatrix = glm::scale(modelMatrix, scale);
+
+    glUniformMatrix4fv(vpMatrixID, 1, GL_FALSE, &cameraMatrix[0][0]);
+    glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 
     glm::mat4 mvpLight = lightMatrix;
     glUniformMatrix4fv(glGetUniformLocation(programID, "MVPLight"), 1, GL_FALSE, &mvpLight[0][0]);
@@ -103,8 +108,10 @@ void Tree::renderShadow(glm::mat4 lightMatrix) {
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 
-    // Set model-view-projection matrix
-    glm::mat4 mvp = lightMatrix;
+    glm::mat4 modelMatrix = glm::mat4();
+    modelMatrix = glm::translate(modelMatrix, position);
+    modelMatrix = glm::scale(modelMatrix, scale);
+    glm::mat4 mvp = lightMatrix * modelMatrix;
     glUniformMatrix4fv(mvpLightMatrixID, 1, GL_FALSE, &mvp[0][0]);
 
     // Draw the box
