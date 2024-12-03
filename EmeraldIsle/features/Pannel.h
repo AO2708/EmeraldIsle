@@ -22,6 +22,7 @@ extern GLuint depthTexture;
 struct Pannel {
     glm::vec3 position;
     glm::vec3 scale;
+    float rotation;
 
     GLuint vertexArrayID;
     GLuint vertexBufferID;
@@ -33,7 +34,8 @@ struct Pannel {
 
     GLuint textureID;
     GLuint textureSamplerID;
-    GLuint mvpMatrixID;
+    GLuint vpMatrixID;
+    GLuint modelMatrixID;
     GLuint mvpLightMatrixID;
     GLuint lightPositionID;
     GLuint lightIntensityID;
@@ -47,7 +49,7 @@ struct Pannel {
     std::vector<GLfloat> textures;
     std::vector<GLuint> isTextured;
 
-    void initialize(glm::vec3, glm::vec3);
+    void initialize(glm::vec3, glm::vec3, float rotation);
 
     void render(glm::mat4, glm::mat4);
 

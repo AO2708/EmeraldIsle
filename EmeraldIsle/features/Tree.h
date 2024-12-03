@@ -29,7 +29,8 @@ struct Tree {
     GLuint colorBufferID;
     GLuint normalBufferID;
 
-    GLuint mvpMatrixID;
+    GLuint vpMatrixID;
+    GLuint modelMatrixID;
     GLuint mvpLightMatrixID;
     GLuint lightPositionID;
     GLuint lightIntensityID;
