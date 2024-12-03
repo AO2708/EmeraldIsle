@@ -6,6 +6,7 @@ flat in int isTextured;
 in vec3 worldPosition;
 in vec3 worldNormal;
 in vec4 fragPosLightSpace;
+in float coefReflectance;
 
 uniform sampler2D textureSampler;
 uniform vec3 lightPosition;
@@ -33,7 +34,7 @@ float lambertianTerm() {
     vec3 worldNormal = normalize(worldNormal);
     vec3 light = normalize(lightPosition - worldPosition);
     float cosTheta = max(dot(worldNormal, light),0.0);
-    float reflectance = 1.0 / 3.14159;
+    float reflectance = coefReflectance / 3.14159;
     float lambTerm = reflectance * cosTheta;
     return lambTerm;
 }
@@ -50,7 +51,7 @@ void main() {
     if (distance > 0.0) {
         float lambTerm = lambertianTerm();
         float attenuation = 1.0 / (4.0 * 3.14159 * distance);
-        finalColor *= (lightIntensity*attenuation) * (lambTerm);
+        finalColor *= (lightIntensity*attenuation *lambTerm);
 
     } else {
         finalColor = vec3(1.0);
