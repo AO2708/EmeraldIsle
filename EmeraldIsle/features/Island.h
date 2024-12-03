@@ -13,7 +13,7 @@
 #include <render/shader.h>
 
 #include <vector>
-#include <loader/LoaderObj.h>
+#include <loader/FileLoader.h>
 
 extern const glm::vec3 lightPosition;
 extern const glm::vec3 lightIntensity;

@@ -2,9 +2,9 @@
 // Created by apita on 01/12/2024.
 //
 
-#include "LoaderObj.h"
+#include "FileLoader.h"
 
-void LoaderObj::loadMTL(const std::string &path,std::unordered_map<std::string,Material> &materials) {
+void FileLoader::loadMTL(const std::string &path,std::unordered_map<std::string,Material> &materials) {
     std::cout << "MTL FILE LOADING " << path << std::endl;
     std::ifstream file(path);
     if (!file.is_open()) {
@@ -58,7 +58,7 @@ void LoaderObj::loadMTL(const std::string &path,std::unordered_map<std::string,M
     std::cout << "MTL Loaded successfully!" << std::endl;
 }
 
-void LoaderObj::loadOBJ(const std::string &pathObj,
+void FileLoader::loadOBJ(const std::string &pathObj,
                 std::vector<GLfloat> & vertices,
                 std::vector<GLfloat> & normals,
                 std::vector<GLfloat> & colors,
@@ -161,7 +161,7 @@ void LoaderObj::loadOBJ(const std::string &pathObj,
     std::cout << "OBJ FILE LOADED" << std::endl;
 }
 
-void LoaderObj::loadOBJ(const std::string &pathObj,
+void FileLoader::loadOBJ(const std::string &pathObj,
                 std::vector<GLfloat> & vertices,
                 std::vector<GLfloat> & normals,
                 std::vector<GLfloat> & colors,
@@ -281,7 +281,7 @@ void LoaderObj::loadOBJ(const std::string &pathObj,
     std::cout << "OBJ FILE LOADED" << std::endl;
 }
 
-GLuint LoaderObj::loadTextureTileBox(const char *texture_file_path) {
+GLuint FileLoader::loadTextureTileBox(const char *texture_file_path) {
     int w, h, channels;
     uint8_t* img = stbi_load(texture_file_path, &w, &h, &channels, 3);
     GLuint texture;

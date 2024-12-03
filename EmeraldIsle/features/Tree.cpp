@@ -4,8 +4,6 @@
 
 #include "Tree.h"
 
-#include <loader/LoaderObj.h>
-
 void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
     this->position = position;
     this->scale = scale;
@@ -13,7 +11,7 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
     vertices.resize(4104);
     normals.resize(4104);
     colors.resize(4104);
-    LoaderObj loader;
+    FileLoader loader;
     loader.loadOBJ("../EmeraldIsle/model/pine.obj", vertices, normals,colors,indices,"../EmeraldIsle/model/pine.mtl");
 
     glGenVertexArrays(1, &vertexArrayID);

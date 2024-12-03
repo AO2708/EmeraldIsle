@@ -2,8 +2,8 @@
 // Created by apita on 01/12/2024.
 //
 
-#ifndef LOADEROBJ_H
-#define LOADEROBJ_H
+#ifndef FILELOADER_H
+#define FILELOADER_H
 
 #include <../stb/stb_image.h>
 
@@ -27,7 +27,7 @@ struct Material {
     std::string texturePath = "";
 };
 
-struct LoaderObj {
+struct FileLoader {
 
     void loadMTL(const std::string &, std::unordered_map<std::string, Material> &materials);
 
@@ -43,4 +43,4 @@ struct LoaderObj {
 
 
 
-#endif //LOADEROBJ_H
+#endif //FILELOADER_H
