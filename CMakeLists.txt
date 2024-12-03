@@ -24,6 +24,7 @@ add_executable(main
         EmeraldIsle/features/Tree.cpp
         EmeraldIsle/loader/LoaderObj.cpp
         EmeraldIsle/features/Island.cpp
+        EmeraldIsle/features/Pannel.cpp
 )
 
 target_link_libraries(main
