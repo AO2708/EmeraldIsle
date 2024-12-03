@@ -1,43 +1,54 @@
 //
-// Created by apita on 30/11/2024.
+// Created by apita on 03/12/2024.
 //
 
-#include "Tree.h"
+#include "Pannel.h"
 
 #include <loader/LoaderObj.h>
 
-void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
+void Pannel::initialize(glm::vec3 position, glm::vec3 scale) {
     this->position = position;
     this->scale = scale;
 
-    vertices.resize(4104);
-    normals.resize(4104);
-    colors.resize(4104);
+    vertices.resize(7596);
+    normals.resize(7596);
+    colors.resize(7596);
+    textures.resize(5064);
+    isTextured.resize(2532);
     LoaderObj loader;
-    loader.loadOBJ("../EmeraldIsle/model/pine.obj", vertices, normals,colors,indices,"../EmeraldIsle/model/pine.mtl");
-
+    loader.loadOBJ("../EmeraldIsle/model/pannel.obj", vertices, normals,colors,indices, textures, isTextured,"../EmeraldIsle/model/pannel.mtl");
+    std::cout << "ok" << std::endl;
     glGenVertexArrays(1, &vertexArrayID);
     glBindVertexArray(vertexArrayID);
-
+    std::cout << "ok" << std::endl;
     glGenBuffers(1, &vertexBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
-
+    std::cout << "ok" << std::endl;
     glGenBuffers(1, &colorBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, colorBufferID);
     glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
-
+    std::cout << "ok" << std::endl;
     glGenBuffers(1, &normalBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
     glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(GLfloat), normals.data(), GL_STATIC_DRAW);
+    std::cout << "ok" << std::endl;
+    glGenBuffers(1, &texCoordBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, texCoordBufferID);
+    glBufferData(GL_ARRAY_BUFFER, textures.size() * sizeof(GLfloat), textures.data(), GL_STATIC_DRAW);
+    std::cout << "ok" << std::endl;
+    glGenBuffers(1, &isTexturedBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, isTexturedBufferID);
+    glBufferData(GL_ARRAY_BUFFER, isTextured.size() * sizeof(GLuint), isTextured.data(), GL_STATIC_DRAW);
+    std::cout << "ok" << std::endl;
 
     glGenBuffers(1, &indexBufferID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
-    programID = LoadShadersFromFile("../EmeraldIsle/shader/tree.vert", "../EmeraldIsle/shader/tree.frag");
+    programID = LoadShadersFromFile("../EmeraldIsle/shader/pannel.vert", "../EmeraldIsle/shader/pannel.frag");
     if (programID == 0) {
-        std::cerr << "Erreur : Impossible de charger les shaders 'tree'" << std::endl;
+        std::cerr << "Erreur : Impossible de charger les shaders 'pannel'" << std::endl;
     }
 
     shadowProgramID = LoadShadersFromFile("../EmeraldIsle/shader/shadowMapping.vert", "../EmeraldIsle/shader/shadowMapping.frag");
@@ -45,13 +56,18 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
         std::cerr << "Erreur : Impossible de charger les shaders 'shadow'" << std::endl;
     }
 
+    // Load a Texture
+    textureID = loader.loadTextureTileBox("../EmeraldIsle/model/radioPannel.png");
+    textureSamplerID = glGetUniformLocation(programID, "textureSampler");
+
+
     mvpMatrixID = glGetUniformLocation(programID, "MVP");
     lightPositionID = glGetUniformLocation(programID, "lightPosition");
     lightIntensityID = glGetUniformLocation(programID, "lightIntensity");
     mvpLightMatrixID = glGetUniformLocation(shadowProgramID, "MVPLight");
 }
 
-void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
+void Pannel::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glUseProgram(programID);
 
     glEnableVertexAttribArray(0);
@@ -66,11 +82,23 @@ void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+    glEnableVertexAttribArray(3);
+    glBindBuffer(GL_ARRAY_BUFFER, texCoordBufferID);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glEnableVertexAttribArray(4);
+    glBindBuffer(GL_ARRAY_BUFFER, isTexturedBufferID);
+    glVertexAttribPointer(4, 1, GL_UNSIGNED_INT, GL_FALSE, 0, 0);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, depthTexture);
     glUniform1i(glGetUniformLocation(programID,"shadowTexture"), 0);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glUniform1i(textureSamplerID, 0);
 
     glm::mat4 mvp = cameraMatrix;
     glUniformMatrix4fv(mvpMatrixID, 1, GL_FALSE, &mvp[0][0]);
@@ -84,7 +112,7 @@ void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
 
     glDrawElements(
         GL_TRIANGLES,      // mode
-        1368,              // number of indices
+        2532,               // number of indices
         GL_UNSIGNED_INT,   // type
         (void*)0           // element array buffer offset
     );
@@ -92,9 +120,11 @@ void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
 }
 
-void Tree::renderShadow(glm::mat4 lightMatrix) {
+void Pannel::renderShadow(glm::mat4 lightMatrix) {
     glUseProgram(shadowProgramID);
 
     glEnableVertexAttribArray(0);
@@ -110,7 +140,7 @@ void Tree::renderShadow(glm::mat4 lightMatrix) {
     // Draw the box
     glDrawElements(
         GL_TRIANGLES,      // mode
-        1368,    			   // number of indices
+        2532,    		   // number of indices
         GL_UNSIGNED_INT,   // type
         (void*)0           // element array buffer offset
     );
@@ -118,13 +148,14 @@ void Tree::renderShadow(glm::mat4 lightMatrix) {
     glDisableVertexAttribArray(0);
 }
 
-void Tree::cleanup() {
+void Pannel::cleanup() {
     glDeleteBuffers(1, &vertexBufferID);
     glDeleteBuffers(1, &colorBufferID);
     glDeleteBuffers(1, &indexBufferID);
-    glDeleteVertexArrays(1, &normalBufferID);
+    glDeleteBuffers(1, &normalBufferID);
+    glDeleteBuffers(1, &texCoordBufferID);
+    glDeleteBuffers(1, &isTexturedBufferID);
     glDeleteVertexArrays(1, &vertexArrayID);
     glDeleteProgram(programID);
     glDeleteProgram(shadowProgramID);
 }
-

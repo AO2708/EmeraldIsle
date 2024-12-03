@@ -7,11 +7,13 @@
 
 #include <iostream>
 #define _USE_MATH_DEFINES
+#define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <../stb/stb_image_write.h>
 
 #include <features/Tree.h>
 #include <features/Island.h>
+#include <features/Pannel.h>
 
 static GLFWwindow *window;
 static int windowWidth = 1024;
@@ -36,7 +38,7 @@ static float viewDistance = glm::length(eye_center - lookat);
 const glm::vec3 wave500(0.0f, 255.0f, 146.0f);
 const glm::vec3 wave600(255.0f, 190.0f, 0.0f);
 const glm::vec3 wave700(205.0f, 0.0f, 0.0f);
-const glm::vec3 lightIntensity = 100.0f * (8.0f * wave500 + 15.6f * wave600 + 18.4f * wave700);
+const glm::vec3 lightIntensity = 10000.0f * glm::vec3(255.0f, 244.0f, 214.0f);
 const glm::vec3 lightPosition(-75.0f, 100.0f, -75.0f);
 
 // Shadow mapping
@@ -49,7 +51,7 @@ static float depthNear = 100.0f;
 static float depthFar = 500.0f;
 GLuint fbo;
 GLuint depthTexture;
-static bool saveDepth = false;
+static bool saveDepth = true;
 
 static void saveDepthTexture(GLuint fbo, std::string filename) {
 	int width = shadowMapWidth;
@@ -240,6 +242,9 @@ int main(void)
 	AxisXYZ axis;
 	axis.initialize();
 
+	Pannel pannel;
+	pannel.initialize(glm::vec3(0.0,0.0,0.0), glm::vec3(1.0,1.0,1.0));
+
 	Island island;
 	island.initialize(glm::vec3(0.0,0.0,0.0), glm::vec3(2.0,2.0,2.0));
 
@@ -263,6 +268,7 @@ int main(void)
 
 		tree.renderShadow(vpLight);
 		island.renderShadow(vpLight);
+		pannel.renderShadow(vpLight);
 		if (saveDepth) {
 			std::string filename = "../EmeraldIsle/depth_camera.png";
 			saveDepthTexture(fbo, filename);
@@ -279,6 +285,7 @@ int main(void)
 
 		tree.render(vp, vpLight);
 		axis.render(vp);
+		pannel.render(vp,vpLight);
 		island.render(vp,vpLight);
 
 		// Swap buffers
@@ -291,8 +298,9 @@ int main(void)
 	// Clean up
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteTextures(1, &depthTexture);
-	tree.cleanup();
+	//tree.cleanup();
 	axis.cleanup();
+	//island.cleanup();
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
