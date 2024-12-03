@@ -298,9 +298,9 @@ int main(void)
 	// Clean up
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteTextures(1, &depthTexture);
-	//tree.cleanup();
+	tree.cleanup();
 	axis.cleanup();
-	//island.cleanup();
+	island.cleanup();
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();

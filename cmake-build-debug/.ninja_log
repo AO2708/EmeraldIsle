@@ -1,6 +1,6 @@
 # ninja log v6
-6	717	7549368053559732	build.ninja	99c0a48b749787ed
-15	2962	7549462639580182	CMakeFiles/main.dir/EmeraldIsle/main.cpp.obj	9810265e661e9daf
+6	717	7549467972422484	build.ninja	99c0a48b749787ed
+13	2993	7549466216406980	CMakeFiles/main.dir/EmeraldIsle/main.cpp.obj	9810265e661e9daf
 7	1279	7546948234039661	external/glad-3.3/CMakeFiles/glad.dir/src/gl.c.obj	71d51e61f66c52a9
 167	3024	7549373210814011	CMakeFiles/main.dir/EmeraldIsle/features/Tree.cpp.obj	51de13d1c9d6e069
 66	1752	7546948234632273	external/glfw-3.1.2/src/CMakeFiles/glfw.dir/context.c.obj	ce2cb5ab804f4b32
@@ -21,18 +21,14 @@
 14	2335	7549449804477135	CMakeFiles/main.dir/EmeraldIsle/features/Pannel.cpp.obj	9e64fb91caa1c5e8
 6659	7489	7546948308730189	glfw3.dll	ea990bf74094cec9
 6659	7489	7546948308730189	glfw3dll.a	ea990bf74094cec9
-2963	3803	7549462669049671	main.exe	4c6d46259b68c8bb
+2993	3848	7549466246212258	main.exe	4c6d46259b68c8bb
 185	1739	7548378915875872	CMakeFiles/main.dir/EmeraldIsle/render/shader.cpp.obj	c8a3848967411d5f
 171	3000	7548590931538509	CMakeFiles/main.dir/EmeraldIsle/Tree.cpp.obj	8e8b6bd5c1f5d53f
 345	3516	7548590933267207	CMakeFiles/main.dir/EmeraldIsle/Island.cpp.obj	4adc1a7a716ea2b0
 555	4038	7549373214692185	CMakeFiles/main.dir/EmeraldIsle/features/Island.cpp.obj	3d00e0caadc48058
-19	2973	7549462840569660	CMakeFiles/main.dir/EmeraldIsle/main.cpp.obj	9810265e661e9daf
-2973	3808	7549462870104624	main.exe	4c6d46259b68c8bb
-16	3786	7549463584721869	CMakeFiles/main.dir/EmeraldIsle/main.cpp.obj	9810265e661e9daf
-3786	4778	7549463622421870	main.exe	4c6d46259b68c8bb
-12	2845	7549464106958724	CMakeFiles/main.dir/EmeraldIsle/main.cpp.obj	9810265e661e9daf
-2846	3726	7549464135291554	main.exe	4c6d46259b68c8bb
-13	2782	7549465082123664	CMakeFiles/main.dir/EmeraldIsle/main.cpp.obj	9810265e661e9daf
-2783	3607	7549465109805190	main.exe	4c6d46259b68c8bb
-13	2993	7549466216406980	CMakeFiles/main.dir/EmeraldIsle/main.cpp.obj	9810265e661e9daf
-2993	3848	7549466246212258	main.exe	4c6d46259b68c8bb
+190	3018	7549468102428870	CMakeFiles/main.dir/EmeraldIsle/features/Tree.cpp.obj	51de13d1c9d6e069
+13	3538	7549468100659220	CMakeFiles/main.dir/EmeraldIsle/main.cpp.obj	9810265e661e9daf
+399	3695	7549468104509354	CMakeFiles/main.dir/EmeraldIsle/loader/LoaderObj.cpp.obj	79951e86eeec3e02
+590	3913	7549468106428644	CMakeFiles/main.dir/EmeraldIsle/features/Island.cpp.obj	3d00e0caadc48058
+758	4317	7549468108106237	CMakeFiles/main.dir/EmeraldIsle/features/Pannel.cpp.obj	9e64fb91caa1c5e8
+4317	5190	7549468143698751	main.exe	4c6d46259b68c8bb
