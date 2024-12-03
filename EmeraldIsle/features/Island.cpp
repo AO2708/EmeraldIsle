@@ -11,7 +11,7 @@ void Island::initialize(glm::vec3 position, glm::vec3 scale) {
     vertices.resize(17298);
     normals.resize(17298);
     colors.resize(17298);
-    LoaderObj loader;
+    FileLoader loader;
     loader.loadOBJ("../EmeraldIsle/model/island.obj", vertices, normals,colors,indices,"../EmeraldIsle/model/island.mtl");
 
     glGenVertexArrays(1, &vertexArrayID);

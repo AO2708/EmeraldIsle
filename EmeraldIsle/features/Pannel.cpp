@@ -4,11 +4,6 @@
 
 #include "Pannel.h"
 
-#include <loader/LoaderObj.h>
-
-#include "Island.h"
-#include "Island.h"
-#include "Island.h"
 #include "Island.h"
 
 void Pannel::initialize(glm::vec3 position, glm::vec3 scale, float rotation) {
@@ -21,7 +16,7 @@ void Pannel::initialize(glm::vec3 position, glm::vec3 scale, float rotation) {
     colors.resize(7596);
     textures.resize(5064);
     isTextured.resize(2532);
-    LoaderObj loader;
+    FileLoader loader;
     loader.loadOBJ("../EmeraldIsle/model/pannel.obj", vertices, normals,colors,indices, textures, isTextured,"../EmeraldIsle/model/pannel.mtl");
     glGenVertexArrays(1, &vertexArrayID);
     glBindVertexArray(vertexArrayID);
