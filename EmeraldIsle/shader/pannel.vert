@@ -17,6 +17,7 @@ flat out int isTextured;
 out vec3 worldPosition;
 out vec3 worldNormal;
 out vec4 fragPosLightSpace;
+out float coefReflectance;
 
 void main() {
     // Transform vertex
@@ -28,4 +29,6 @@ void main() {
     worldPosition = vec3(modelMatrix * vec4(vertexPosition, 1.0));
     worldNormal = mat3(transpose(inverse(modelMatrix))) * vertexNormal;
     fragPosLightSpace = MVPLight * vec4(vertexPosition, 1.0);
+
+    coefReflectance = 0.5;
 }

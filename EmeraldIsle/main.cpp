@@ -39,7 +39,7 @@ const glm::vec3 wave500(0.0f, 255.0f, 146.0f);
 const glm::vec3 wave600(255.0f, 190.0f, 0.0f);
 const glm::vec3 wave700(205.0f, 0.0f, 0.0f);
 const glm::vec3 lightIntensity = 10000.0f * glm::vec3(255.0f, 244.0f, 214.0f);
-const glm::vec3 lightPosition(-75.0f, 100.0f, -75.0f);
+const glm::vec3 lightPosition(-50.0f, 100.0f, -50.0f);
 
 // Shadow mapping
 static glm::vec3 lightUp = glm::normalize(glm::vec3(0.333, 0.333, 0.883));
