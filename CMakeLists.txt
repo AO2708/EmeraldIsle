@@ -21,7 +21,7 @@ include_directories(
 add_executable(main
         EmeraldIsle/main.cpp
         EmeraldIsle/render/shader.cpp
-        EmeraldIsle/features/Tree.cpp
+        EmeraldIsle/features/Forest.cpp
         EmeraldIsle/loader/FileLoader.cpp
         EmeraldIsle/features/Island.cpp
         EmeraldIsle/features/Pannel.cpp

@@ -2,12 +2,9 @@
 // Created by apita on 30/11/2024.
 //
 
-#include "Tree.h"
+#include "Forest.h"
 
-#include <loader/FileLoader.h>
-#include <loader/FileLoader.h>
-
-void Tree::initialize(glm::vec3 position, glm::vec3 scale, int n) {
+void Forest::initialize(glm::vec3 position, glm::vec3 scale, int n) {
     this->position = position;
     this->scale = scale;
     this->nInstances = n;
@@ -43,12 +40,12 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale, int n) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
-    programID = LoadShadersFromFile("../EmeraldIsle/shader/tree.vert", "../EmeraldIsle/shader/tree.frag");
+    programID = LoadShadersFromFile("../EmeraldIsle/shader/forest.vert", "../EmeraldIsle/shader/forest.frag");
     if (programID == 0) {
-        std::cerr << "Erreur : Impossible de charger les shaders 'tree'" << std::endl;
+        std::cerr << "Erreur : Impossible de charger les shaders 'Forest'" << std::endl;
     }
 
-    shadowProgramID = LoadShadersFromFile("../EmeraldIsle/shader/shadowMappingTree.vert", "../EmeraldIsle/shader/shadowMapping.frag");
+    shadowProgramID = LoadShadersFromFile("../EmeraldIsle/shader/shadowMappingForest.vert", "../EmeraldIsle/shader/shadowMapping.frag");
     if (shadowProgramID == 0) {
         std::cerr << "Erreur : Impossible de charger les shaders 'shadow'" << std::endl;
     }
@@ -60,7 +57,7 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale, int n) {
     glBindVertexArray(0);
 }
 
-void Tree::createModelMatrices(std::vector<glm::mat4> & modelMatrices, int nInstances) {
+void Forest::createModelMatrices(std::vector<glm::mat4> & modelMatrices, int nInstances) {
     float radius = 6.0;
     float offset = 4.0;
     float rMaxOrigin = 40.0;
@@ -96,7 +93,7 @@ void Tree::createModelMatrices(std::vector<glm::mat4> & modelMatrices, int nInst
     }
 }
 
-void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
+void Forest::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glUseProgram(programID);
     glBindVertexArray(vertexArrayID);
 
@@ -159,7 +156,7 @@ void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glBindVertexArray(0);
 }
 
-void Tree::renderShadow(glm::mat4 lightMatrix) {
+void Forest::renderShadow(glm::mat4 lightMatrix) {
     glUseProgram(shadowProgramID);
     glBindVertexArray(vertexArrayID);
 
@@ -203,7 +200,7 @@ void Tree::renderShadow(glm::mat4 lightMatrix) {
     glBindVertexArray(0);
 }
 
-void Tree::cleanup() {
+void Forest::cleanup() {
     glDeleteBuffers(1, &vertexBufferID);
     glDeleteBuffers(1, &colorBufferID);
     glDeleteBuffers(1, &indexBufferID);
