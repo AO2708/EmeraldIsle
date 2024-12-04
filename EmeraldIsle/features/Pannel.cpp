@@ -4,8 +4,6 @@
 
 #include "Pannel.h"
 
-#include "Island.h"
-
 void Pannel::initialize(glm::vec3 position, glm::vec3 scale, float rotation) {
     this->position = position;
     this->scale = scale;
@@ -65,10 +63,12 @@ void Pannel::initialize(glm::vec3 position, glm::vec3 scale, float rotation) {
     lightPositionID = glGetUniformLocation(programID, "lightPosition");
     lightIntensityID = glGetUniformLocation(programID, "lightIntensity");
     mvpLightMatrixID = glGetUniformLocation(shadowProgramID, "MVPLight");
+    glBindVertexArray(0);
 }
 
 void Pannel::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glUseProgram(programID);
+    glBindVertexArray(vertexArrayID);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -127,10 +127,12 @@ void Pannel::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glDisableVertexAttribArray(2);
     glDisableVertexAttribArray(3);
     glDisableVertexAttribArray(4);
+    glBindVertexArray(0);
 }
 
 void Pannel::renderShadow(glm::mat4 lightMatrix) {
     glUseProgram(shadowProgramID);
+    glBindVertexArray(vertexArrayID);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -154,6 +156,7 @@ void Pannel::renderShadow(glm::mat4 lightMatrix) {
     );
 
     glDisableVertexAttribArray(0);
+    glBindVertexArray(0);
 }
 
 void Pannel::cleanup() {
@@ -163,6 +166,7 @@ void Pannel::cleanup() {
     glDeleteBuffers(1, &normalBufferID);
     glDeleteBuffers(1, &texCoordBufferID);
     glDeleteBuffers(1, &isTexturedBufferID);
+    glDeleteTextures(1, &textureID);
     glDeleteVertexArrays(1, &vertexArrayID);
     glDeleteProgram(programID);
     glDeleteProgram(shadowProgramID);
