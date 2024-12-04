@@ -12,7 +12,7 @@
 #include <iomanip>
 #include <../stb/stb_image_write.h>
 
-#include <features/Tree.h>
+#include <features/Forest.h>
 #include <features/Island.h>
 #include <features/Pannel.h>
 
@@ -237,11 +237,11 @@ int main(void)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	//Initialisation
-	Tree tree;
-	tree.initialize(glm::vec3(-28.0,0.0,32.0), glm::vec3(0.5,0.5,0.5), 15);
+	Forest forestEastNorth;
+	forestEastNorth.initialize(glm::vec3(-28.0,0.0,32.0), glm::vec3(0.5,0.5,0.5), 15);
 
-	Tree treeWestNorth;
-	treeWestNorth.initialize(glm::vec3(28.0,0.0,32.0), glm::vec3(0.5,0.5,0.5), 10);
+	Forest forestWestNorth;
+	forestWestNorth.initialize(glm::vec3(28.0,0.0,32.0), glm::vec3(0.5,0.5,0.5), 10);
 
 	AxisXYZ axis;
 	axis.initialize();
@@ -275,8 +275,8 @@ int main(void)
 		viewMatrixLight = glm::lookAt(lightPosition, lightLookAt, lightUp);
 		glm::mat4 vpLight = projectionMatrixLight * viewMatrixLight;
 
-		tree.renderShadow(vpLight);
-		treeWestNorth.renderShadow(vpLight);
+		forestEastNorth.renderShadow(vpLight);
+		forestWestNorth.renderShadow(vpLight);
 		island.renderShadow(vpLight);
 		pannel.renderShadow(vpLight);
 		if (saveDepth) {
@@ -298,8 +298,8 @@ int main(void)
 		viewMatrix = glm::lookAt(eye_center, lookat, up);
 		glm::mat4 vp = projectionMatrix * viewMatrix;
 
-		tree.render(vp, vpLight);
-		treeWestNorth.render(vp, vpLight);
+		forestEastNorth.render(vp, vpLight);
+		forestWestNorth.render(vp, vpLight);
 		axis.render(vp);
 		pannel.render(vp,vpLight);
 		island.render(vp,vpLight);
@@ -328,8 +328,8 @@ int main(void)
 	// Clean up
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteTextures(1, &depthTexture);
-	tree.cleanup();
-	treeWestNorth.cleanup();
+	forestEastNorth.cleanup();
+	forestWestNorth.cleanup();
 	axis.cleanup();
 	island.cleanup();
 	pannel.cleanup();

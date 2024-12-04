@@ -19,7 +19,7 @@ extern const glm::vec3 lightPosition;
 extern const glm::vec3 lightIntensity;
 extern GLuint depthTexture;
 
-struct Tree {
+struct Forest {
     glm::vec3 position;
     glm::vec3 scale;
     int nInstances;
