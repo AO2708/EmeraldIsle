@@ -4,8 +4,6 @@
 
 #include "Pannel.h"
 
-#include "Island.h"
-
 void Pannel::initialize(glm::vec3 position, glm::vec3 scale, float rotation) {
     this->position = position;
     this->scale = scale;
@@ -163,6 +161,7 @@ void Pannel::cleanup() {
     glDeleteBuffers(1, &normalBufferID);
     glDeleteBuffers(1, &texCoordBufferID);
     glDeleteBuffers(1, &isTexturedBufferID);
+    glDeleteTextures(1, &textureID);
     glDeleteVertexArrays(1, &vertexArrayID);
     glDeleteProgram(programID);
     glDeleteProgram(shadowProgramID);
