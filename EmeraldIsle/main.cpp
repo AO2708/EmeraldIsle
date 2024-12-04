@@ -238,13 +238,16 @@ int main(void)
 
 	//Initialisation
 	Tree tree;
-	tree.initialize(glm::vec3(-30.0,0.0,30.0), glm::vec3(0.5,0.5,0.5), 10);
+	tree.initialize(glm::vec3(-28.0,0.0,32.0), glm::vec3(0.5,0.5,0.5), 15);
+
+	Tree treeWestNorth;
+	treeWestNorth.initialize(glm::vec3(28.0,0.0,32.0), glm::vec3(0.5,0.5,0.5), 10);
 
 	AxisXYZ axis;
 	axis.initialize();
 
 	Pannel pannel;
-	//pannel.initialize(glm::vec3(20.0,-0.2,-48.0), glm::vec3(1.0,1.0,1.0), glm::radians(235.0f));
+	pannel.initialize(glm::vec3(20.0,-0.2,-48.0), glm::vec3(1.0,1.0,1.0), glm::radians(235.0f));
 
 	Island island;
 	island.initialize(glm::vec3(0.0,0.0,0.0), glm::vec3(5.0,5.0,5.0));
@@ -273,8 +276,9 @@ int main(void)
 		glm::mat4 vpLight = projectionMatrixLight * viewMatrixLight;
 
 		tree.renderShadow(vpLight);
+		treeWestNorth.renderShadow(vpLight);
 		island.renderShadow(vpLight);
-		//pannel.renderShadow(vpLight);
+		pannel.renderShadow(vpLight);
 		if (saveDepth) {
 			std::string filename = "../EmeraldIsle/depth_camera.png";
 			saveDepthTexture(fbo, filename);
@@ -295,8 +299,9 @@ int main(void)
 		glm::mat4 vp = projectionMatrix * viewMatrix;
 
 		tree.render(vp, vpLight);
+		treeWestNorth.render(vp, vpLight);
 		axis.render(vp);
-		//pannel.render(vp,vpLight);
+		pannel.render(vp,vpLight);
 		island.render(vp,vpLight);
 
 		// FPS tracking
@@ -324,9 +329,10 @@ int main(void)
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteTextures(1, &depthTexture);
 	tree.cleanup();
+	treeWestNorth.cleanup();
 	axis.cleanup();
-	//island.cleanup();
-	//pannel.cleanup();
+	island.cleanup();
+	pannel.cleanup();
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();

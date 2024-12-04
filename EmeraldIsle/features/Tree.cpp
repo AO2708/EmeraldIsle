@@ -60,8 +60,10 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale, int n) {
 }
 
 void Tree::createModelMatrices(std::vector<glm::mat4> & modelMatrices, int nInstances) {
-    float radius = 7.0;
-    float offset = 2.5;
+    float radius = 6.0;
+    float offset = 4.0;
+    float rMaxOrigin = 40.0;
+    float hMax = 1.0;
     srand(42);
     // Add the initial Tree
     glm::mat4 modelMatrix = glm::mat4(1.0f);
@@ -75,8 +77,14 @@ void Tree::createModelMatrices(std::vector<glm::mat4> & modelMatrices, int nInst
         float angle = (float) i * 360.0f / nInstances;
         float displacement = (rand() % static_cast<int>(2 * offset * 100)) / 100.0f - offset;
         float x = position.x + sin(angle) * radius + displacement;
-        float y = position.y + displacement * 0.4f;
         float z = position.z + cos(angle) * radius + displacement;
+
+        float distanceOrigin = std::sqrt(x * x + z * z);
+        float y = distanceOrigin < rMaxOrigin ? rMaxOrigin * (1.0f - (distanceOrigin / rMaxOrigin)) : 0.0f;
+        if (y > hMax) {
+            y = hMax;
+        }
+
         modelMatrix = glm::translate(modelMatrix, glm::vec3(x, y, z));
 
         // Scale
@@ -194,6 +202,7 @@ void Tree::cleanup() {
     glDeleteBuffers(1, &vertexBufferID);
     glDeleteBuffers(1, &colorBufferID);
     glDeleteBuffers(1, &indexBufferID);
+    glDeleteBuffers(1, &matricesBufferID);
     glDeleteVertexArrays(1, &normalBufferID);
     glDeleteVertexArrays(1, &vertexArrayID);
     glDeleteProgram(programID);
