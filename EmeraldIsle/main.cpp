@@ -9,6 +9,7 @@
 #define _USE_MATH_DEFINES
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <iomanip>
 #include <../stb/stb_image_write.h>
 
 #include <features/Tree.h>
@@ -51,7 +52,7 @@ static float depthNear = 100.0f;
 static float depthFar = 500.0f;
 GLuint fbo;
 GLuint depthTexture;
-static bool saveDepth = true;
+static bool saveDepth = false;
 
 static void saveDepthTexture(GLuint fbo, std::string filename) {
 	int width = shadowMapWidth;
@@ -184,7 +185,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(1024, 768, "Lab 1", NULL, NULL);
+	window = glfwCreateWindow(1024, 768, "Emerald Isle", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cerr << "Failed to open a GLFW window." << std::endl;
@@ -237,7 +238,7 @@ int main(void)
 
 	//Initialisation
 	Tree tree;
-	tree.initialize(glm::vec3(-20.0,0.0,38.0), glm::vec3(0.5,0.5,0.5));
+	tree.initialize(glm::vec3(-30.0,0.0,30.0), glm::vec3(0.5,0.5,0.5), 10);
 
 	AxisXYZ axis;
 	axis.initialize();
@@ -256,6 +257,11 @@ int main(void)
 	glm::mat4 viewMatrix, projectionMatrix;
 	projectionMatrix = glm::perspective(glm::radians(FoV), (float)windowWidth / windowHeight, zNear, zFar);
 
+	// Time and frame rate tracking
+	static double lastTime = glfwGetTime();
+	float time = 0.0f;
+	float fTime = 0.0f;
+	unsigned long frames = 0;
 	do
 	{
 		// Render the depth map
@@ -280,6 +286,11 @@ int main(void)
 		// Render the scene
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// Update states for animation
+		double currentTime = glfwGetTime();
+		float deltaTime = float(currentTime - lastTime);
+		lastTime = currentTime;
+
 		viewMatrix = glm::lookAt(eye_center, lookat, up);
 		glm::mat4 vp = projectionMatrix * viewMatrix;
 
@@ -287,6 +298,20 @@ int main(void)
 		axis.render(vp);
 		//pannel.render(vp,vpLight);
 		island.render(vp,vpLight);
+
+		// FPS tracking
+		// Count number of frames over a few seconds and take average
+		frames++;
+		fTime += deltaTime;
+		if (fTime > 2.0f) {
+			float fps = frames / fTime;
+			frames = 0;
+			fTime = 0;
+
+			std::stringstream stream;
+			stream << std::fixed << std::setprecision(2) << "Emerald Isle | Frames per second (FPS): " << fps;
+			glfwSetWindowTitle(window, stream.str().c_str());
+		}
 
 		// Swap buffers
 		glfwSwapBuffers(window);

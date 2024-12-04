@@ -7,9 +7,10 @@
 #include <loader/FileLoader.h>
 #include <loader/FileLoader.h>
 
-void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
+void Tree::initialize(glm::vec3 position, glm::vec3 scale, int n) {
     this->position = position;
     this->scale = scale;
+    this->nInstances = n;
 
     vertices.resize(4104);
     normals.resize(4104);
@@ -17,13 +18,7 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
     FileLoader loader;
     loader.loadOBJ("../EmeraldIsle/model/pine.obj", vertices, normals,colors,indices,"../EmeraldIsle/model/pine.mtl");
 
-    createModelMatrices(modelMatrices,2);
-    for (glm::mat4 m : modelMatrices) {
-        std::cout << m[0][0] << " " << m[0][1] << " " << m[0][2] << " " << m[0][3] << std::endl;
-        std::cout << m[1][0] << " " << m[1][1] << " " << m[1][2] << " " << m[1][3] << std::endl;
-        std::cout << m[2][0] << " " << m[2][1] << " " << m[2][2] << " " << m[2][3] << std::endl;
-        std::cout << m[3][0] << " " << m[3][1] << " " << m[3][2] << " " << m[3][3] << std::endl;
-    }
+    createModelMatrices(modelMatrices, nInstances);
 
     glGenVertexArrays(1, &vertexArrayID);
     glBindVertexArray(vertexArrayID);
@@ -65,7 +60,7 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
 }
 
 void Tree::createModelMatrices(std::vector<glm::mat4> & modelMatrices, int nInstances) {
-    float radius = 20.0;
+    float radius = 7.0;
     float offset = 2.5;
     srand(42);
     // Add the initial Tree
@@ -78,7 +73,7 @@ void Tree::createModelMatrices(std::vector<glm::mat4> & modelMatrices, int nInst
         glm::mat4 modelMatrix = glm::mat4(1.0f);
         // Translation
         float angle = (float) i * 360.0f / nInstances;
-        float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+        float displacement = (rand() % static_cast<int>(2 * offset * 100)) / 100.0f - offset;
         float x = position.x + sin(angle) * radius + displacement;
         float y = position.y + displacement * 0.4f;
         float z = position.z + cos(angle) * radius + displacement;
@@ -141,7 +136,7 @@ void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
         1368,              // number of indices
         GL_UNSIGNED_INT,   // type
         (void*)0,          // element array buffer offset
-        2                 // number of instances
+        nInstances         // number of instances
     );
 
     glDisableVertexAttribArray(0);
@@ -185,7 +180,7 @@ void Tree::renderShadow(glm::mat4 lightMatrix) {
         1368,              // number of indices
         GL_UNSIGNED_INT,   // type
         (void*)0,          // element array buffer offset
-        2                 // number of instances
+        nInstances         // number of instances
     );
 
     glDisableVertexAttribArray(0);

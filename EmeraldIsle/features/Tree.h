@@ -22,6 +22,7 @@ extern GLuint depthTexture;
 struct Tree {
     glm::vec3 position;
     glm::vec3 scale;
+    int nInstances;
 
     GLuint vertexArrayID;
     GLuint vertexBufferID;
@@ -43,7 +44,7 @@ struct Tree {
     std::vector<GLuint> indices;
     std::vector <glm::mat4> modelMatrices;
 
-    void initialize(glm::vec3, glm::vec3);
+    void initialize(glm::vec3, glm::vec3, int);
 
     void createModelMatrices(std::vector<glm::mat4> &, int);
 
