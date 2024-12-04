@@ -57,6 +57,7 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale, int n) {
     lightPositionID = glGetUniformLocation(programID, "lightPosition");
     lightIntensityID = glGetUniformLocation(programID, "lightIntensity");
     vpLightMatrixID = glGetUniformLocation(shadowProgramID, "VPLight");
+    glBindVertexArray(0);
 }
 
 void Tree::createModelMatrices(std::vector<glm::mat4> & modelMatrices, int nInstances) {
@@ -97,6 +98,7 @@ void Tree::createModelMatrices(std::vector<glm::mat4> & modelMatrices, int nInst
 
 void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glUseProgram(programID);
+    glBindVertexArray(vertexArrayID);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -154,10 +156,12 @@ void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glDisableVertexAttribArray(4);
     glDisableVertexAttribArray(5);
     glDisableVertexAttribArray(6);
+    glBindVertexArray(0);
 }
 
 void Tree::renderShadow(glm::mat4 lightMatrix) {
     glUseProgram(shadowProgramID);
+    glBindVertexArray(vertexArrayID);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -196,6 +200,7 @@ void Tree::renderShadow(glm::mat4 lightMatrix) {
     glDisableVertexAttribArray(4);
     glDisableVertexAttribArray(5);
     glDisableVertexAttribArray(6);
+    glBindVertexArray(0);
 }
 
 void Tree::cleanup() {

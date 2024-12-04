@@ -47,10 +47,12 @@ void Island::initialize(glm::vec3 position, glm::vec3 scale) {
     lightPositionID = glGetUniformLocation(programID, "lightPosition");
     lightIntensityID = glGetUniformLocation(programID, "lightIntensity");
     mvpLightMatrixID = glGetUniformLocation(shadowProgramID, "MVPLight");
+    glBindVertexArray(0);
 }
 
 void Island::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glUseProgram(programID);
+    glBindVertexArray(vertexArrayID);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -95,10 +97,12 @@ void Island::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
+    glBindVertexArray(0);
 }
 
 void Island::renderShadow(glm::mat4 lightMatrix) {
     glUseProgram(shadowProgramID);
+    glBindVertexArray(vertexArrayID);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
@@ -123,6 +127,7 @@ void Island::renderShadow(glm::mat4 lightMatrix) {
     );
 
     glDisableVertexAttribArray(0);
+    glBindVertexArray(0);
 }
 
 void Island::cleanup() {
