@@ -4,10 +4,10 @@
 layout(location = 0) in vec3 vertexPosition;
 layout(location = 1) in vec3 vertexColor;
 layout(location = 2) in vec3 vertexNormal;
+layout(location = 3) in mat4 instanceMatrix;
 
 uniform mat4 VP;
-uniform mat4 modelMatrix;
-uniform mat4 MVPLight;
+uniform mat4 VPLight;
 
 out vec3 color;
 out vec3 worldPosition;
@@ -25,12 +25,12 @@ float calculationReflectance() {
 
 void main() {
     // Transform vertex
-    gl_Position =  VP * modelMatrix * vec4(vertexPosition, 1.0);
+    gl_Position =  VP * instanceMatrix * vec4(vertexPosition, 1.0);
     color = vertexColor;
 
-    worldPosition = vec3(modelMatrix * vec4(vertexPosition, 1.0));
-    worldNormal = mat3(transpose(inverse(modelMatrix))) * vertexNormal;
+    worldPosition = vec3(instanceMatrix * vec4(vertexPosition, 1.0));
+    worldNormal = mat3(transpose(inverse(instanceMatrix))) * vertexNormal;
 
-    fragPosLightSpace = MVPLight * vec4(vertexPosition, 1.0);
+    fragPosLightSpace = VPLight * instanceMatrix * vec4(vertexPosition, 1.0);
     coefReflectance = calculationReflectance();
 }

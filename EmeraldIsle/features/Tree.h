@@ -27,11 +27,11 @@ struct Tree {
     GLuint vertexBufferID;
     GLuint indexBufferID;
     GLuint colorBufferID;
+    GLuint matricesBufferID;
     GLuint normalBufferID;
 
     GLuint vpMatrixID;
-    GLuint modelMatrixID;
-    GLuint mvpLightMatrixID;
+    GLuint vpLightMatrixID;
     GLuint lightPositionID;
     GLuint lightIntensityID;
     GLuint programID;
@@ -41,8 +41,11 @@ struct Tree {
     std::vector<GLfloat> normals;
     std::vector<GLfloat> colors;
     std::vector<GLuint> indices;
+    std::vector <glm::mat4> modelMatrices;
 
     void initialize(glm::vec3, glm::vec3);
+
+    void createModelMatrices(std::vector<glm::mat4> &, int);
 
     void render(glm::mat4, glm::mat4);
 

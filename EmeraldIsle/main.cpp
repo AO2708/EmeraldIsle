@@ -243,7 +243,7 @@ int main(void)
 	axis.initialize();
 
 	Pannel pannel;
-	pannel.initialize(glm::vec3(20.0,-0.2,-48.0), glm::vec3(1.0,1.0,1.0), glm::radians(235.0f));
+	//pannel.initialize(glm::vec3(20.0,-0.2,-48.0), glm::vec3(1.0,1.0,1.0), glm::radians(235.0f));
 
 	Island island;
 	island.initialize(glm::vec3(0.0,0.0,0.0), glm::vec3(5.0,5.0,5.0));
@@ -268,7 +268,7 @@ int main(void)
 
 		tree.renderShadow(vpLight);
 		island.renderShadow(vpLight);
-		pannel.renderShadow(vpLight);
+		//pannel.renderShadow(vpLight);
 		if (saveDepth) {
 			std::string filename = "../EmeraldIsle/depth_camera.png";
 			saveDepthTexture(fbo, filename);
@@ -285,7 +285,7 @@ int main(void)
 
 		tree.render(vp, vpLight);
 		axis.render(vp);
-		pannel.render(vp,vpLight);
+		//pannel.render(vp,vpLight);
 		island.render(vp,vpLight);
 
 		// Swap buffers
@@ -300,7 +300,8 @@ int main(void)
 	glDeleteTextures(1, &depthTexture);
 	tree.cleanup();
 	axis.cleanup();
-	island.cleanup();
+	//island.cleanup();
+	//pannel.cleanup();
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();

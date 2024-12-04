@@ -4,6 +4,9 @@
 
 #include "Tree.h"
 
+#include <loader/FileLoader.h>
+#include <loader/FileLoader.h>
+
 void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
     this->position = position;
     this->scale = scale;
@@ -13,6 +16,14 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
     colors.resize(4104);
     FileLoader loader;
     loader.loadOBJ("../EmeraldIsle/model/pine.obj", vertices, normals,colors,indices,"../EmeraldIsle/model/pine.mtl");
+
+    createModelMatrices(modelMatrices,2);
+    for (glm::mat4 m : modelMatrices) {
+        std::cout << m[0][0] << " " << m[0][1] << " " << m[0][2] << " " << m[0][3] << std::endl;
+        std::cout << m[1][0] << " " << m[1][1] << " " << m[1][2] << " " << m[1][3] << std::endl;
+        std::cout << m[2][0] << " " << m[2][1] << " " << m[2][2] << " " << m[2][3] << std::endl;
+        std::cout << m[3][0] << " " << m[3][1] << " " << m[3][2] << " " << m[3][3] << std::endl;
+    }
 
     glGenVertexArrays(1, &vertexArrayID);
     glBindVertexArray(vertexArrayID);
@@ -29,6 +40,10 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
     glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
     glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(GLfloat), normals.data(), GL_STATIC_DRAW);
 
+    glGenBuffers(1, &matricesBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, matricesBufferID);
+    glBufferData(GL_ARRAY_BUFFER, modelMatrices.size() * sizeof(glm::mat4), modelMatrices.data(), GL_STATIC_DRAW);
+
     glGenBuffers(1, &indexBufferID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
@@ -38,16 +53,43 @@ void Tree::initialize(glm::vec3 position, glm::vec3 scale) {
         std::cerr << "Erreur : Impossible de charger les shaders 'tree'" << std::endl;
     }
 
-    shadowProgramID = LoadShadersFromFile("../EmeraldIsle/shader/shadowMapping.vert", "../EmeraldIsle/shader/shadowMapping.frag");
+    shadowProgramID = LoadShadersFromFile("../EmeraldIsle/shader/shadowMappingTree.vert", "../EmeraldIsle/shader/shadowMapping.frag");
     if (shadowProgramID == 0) {
         std::cerr << "Erreur : Impossible de charger les shaders 'shadow'" << std::endl;
     }
 
     vpMatrixID = glGetUniformLocation(programID, "VP");
-    modelMatrixID = glGetUniformLocation(programID, "modelMatrix");
     lightPositionID = glGetUniformLocation(programID, "lightPosition");
     lightIntensityID = glGetUniformLocation(programID, "lightIntensity");
-    mvpLightMatrixID = glGetUniformLocation(shadowProgramID, "MVPLight");
+    vpLightMatrixID = glGetUniformLocation(shadowProgramID, "VPLight");
+}
+
+void Tree::createModelMatrices(std::vector<glm::mat4> & modelMatrices, int nInstances) {
+    float radius = 20.0;
+    float offset = 2.5;
+    srand(42);
+    // Add the initial Tree
+    glm::mat4 modelMatrix = glm::mat4(1.0f);
+    modelMatrix = glm::translate(modelMatrix, position);
+    modelMatrix = glm::scale(modelMatrix, scale);
+    modelMatrices.push_back(modelMatrix);
+    // Add the others
+    for (int i = 1; i < nInstances; i++) {
+        glm::mat4 modelMatrix = glm::mat4(1.0f);
+        // Translation
+        float angle = (float) i * 360.0f / nInstances;
+        float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+        float x = position.x + sin(angle) * radius + displacement;
+        float y = position.y + displacement * 0.4f;
+        float z = position.z + cos(angle) * radius + displacement;
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(x, y, z));
+
+        // Scale
+        modelMatrix = glm::scale(modelMatrix, scale);
+
+        // Add to the list of matrices
+        modelMatrices.push_back(modelMatrix);
+    }
 }
 
 void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
@@ -65,36 +107,50 @@ void Tree::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+    glBindBuffer(GL_ARRAY_BUFFER, matricesBufferID);
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(4 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(8 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(12 * sizeof(GLfloat)));
+
+    glVertexAttribDivisor(3, 1);
+    glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(5, 1);
+    glVertexAttribDivisor(6, 1);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, depthTexture);
     glUniform1i(glGetUniformLocation(programID,"shadowTexture"), 0);
 
-    glm::mat4 modelMatrix = glm::mat4();
-    modelMatrix = glm::translate(modelMatrix, position);
-    modelMatrix = glm::scale(modelMatrix, scale);
-
     glUniformMatrix4fv(vpMatrixID, 1, GL_FALSE, &cameraMatrix[0][0]);
-    glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 
-    glm::mat4 mvpLight = lightMatrix;
-    glUniformMatrix4fv(glGetUniformLocation(programID, "MVPLight"), 1, GL_FALSE, &mvpLight[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(programID, "VPLight"), 1, GL_FALSE, &lightMatrix[0][0]);
 
     // Set light data
     glUniform3fv(lightPositionID, 1, &lightPosition[0]);
     glUniform3fv(lightIntensityID, 1, &lightIntensity[0]);
 
-    glDrawElements(
+    glDrawElementsInstanced(
         GL_TRIANGLES,      // mode
         1368,              // number of indices
         GL_UNSIGNED_INT,   // type
-        (void*)0           // element array buffer offset
+        (void*)0,          // element array buffer offset
+        2                 // number of instances
     );
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
+    glDisableVertexAttribArray(5);
+    glDisableVertexAttribArray(6);
 }
 
 void Tree::renderShadow(glm::mat4 lightMatrix) {
@@ -104,23 +160,39 @@ void Tree::renderShadow(glm::mat4 lightMatrix) {
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+    glBindBuffer(GL_ARRAY_BUFFER, matricesBufferID);
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(4 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(8 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(12 * sizeof(GLfloat)));
+
+    glVertexAttribDivisor(3, 1);
+    glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(5, 1);
+    glVertexAttribDivisor(6, 1);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 
-    glm::mat4 modelMatrix = glm::mat4();
-    modelMatrix = glm::translate(modelMatrix, position);
-    modelMatrix = glm::scale(modelMatrix, scale);
-    glm::mat4 mvp = lightMatrix * modelMatrix;
-    glUniformMatrix4fv(mvpLightMatrixID, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(vpLightMatrixID, 1, GL_FALSE, &lightMatrix[0][0]);
 
     // Draw the box
-    glDrawElements(
+    glDrawElementsInstanced(
         GL_TRIANGLES,      // mode
-        1368,    			   // number of indices
+        1368,              // number of indices
         GL_UNSIGNED_INT,   // type
-        (void*)0           // element array buffer offset
+        (void*)0,          // element array buffer offset
+        2                 // number of instances
     );
 
     glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
+    glDisableVertexAttribArray(5);
+    glDisableVertexAttribArray(6);
 }
 
 void Tree::cleanup() {
