@@ -63,7 +63,7 @@ void FileLoader::loadOBJ(const std::string &pathObj,
                 std::vector<GLfloat> & normals,
                 std::vector<GLfloat> & colors,
                 std::vector<GLuint> & indices,
-                const std::string &pathMtl = "") {
+                const std::string &pathMtl) {
     std::cout << "OBJ FILE LOADING " << pathObj << std::endl;
 
     std::unordered_map<std::string, Material> materials;
@@ -168,7 +168,7 @@ void FileLoader::loadOBJ(const std::string &pathObj,
                 std::vector<GLuint> & indices,
                 std::vector<GLfloat> & texCoords,
                 std::vector<GLuint> & isTexturedBuffer,
-                const std::string &pathMtl = "") {
+                const std::string &pathMtl) {
     std::cout << "OBJ FILE LOADING " << pathObj << std::endl;
 
     std::unordered_map<std::string, Material> materials;

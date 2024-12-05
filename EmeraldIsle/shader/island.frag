@@ -29,7 +29,8 @@ float shadowCalculation() {
 
 float lambertianTerm() {
     vec3 worldNormal = normalize(worldNormal);
-    vec3 light = normalize(lightPosition - worldPosition);
+    // Sun rays are parallel
+    vec3 light = normalize(lightPosition);
     float cosTheta = dot(worldNormal, light);
     float reflectance = coefReflectance / 3.14159;
     float lambTerm = reflectance * cosTheta;
@@ -39,15 +40,11 @@ float lambertianTerm() {
 void main() {
     float shadow = shadowCalculation();
     vec3 gamma = vec3(2.2);
-    float distance = dot(lightPosition - worldPosition,lightPosition - worldPosition);
-    if (distance > 0.0) {
-        float lambTerm = lambertianTerm();
-        float attenuation = 1.0 / (4.0 * 3.14159 * distance);
-        finalColor = (lightIntensity*attenuation*lambTerm) * color;
-
-    } else {
-        finalColor = vec3(1.0);
-    }
+    // Approximation : All the surface receive the same amount of energy
+    float distance = dot(lightPosition,lightPosition);
+    float lambTerm = lambertianTerm();
+    float attenuation = 1.0 / (4.0 * 3.14159 * distance);
+    finalColor = (lightIntensity*attenuation*lambTerm) * color;
     finalColor = finalColor / (1 + finalColor);      // Reinhard tone mapper
     finalColor = pow(finalColor,1.0/gamma);          // gamma correction
     finalColor *= shadow;

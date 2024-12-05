@@ -25,6 +25,7 @@ add_executable(main
         EmeraldIsle/loader/FileLoader.cpp
         EmeraldIsle/features/Island.cpp
         EmeraldIsle/features/Pannel.cpp
+        EmeraldIsle/features/Sea.cpp
 )
 
 target_link_libraries(main

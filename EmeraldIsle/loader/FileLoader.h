@@ -33,10 +33,10 @@ struct FileLoader {
 
     void loadOBJ(const std::string &pathObj, std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals,
                  std::vector<GLfloat> &colors, std::vector<GLuint> &indices, std::vector<GLfloat> &texCoords,
-                 std::vector<GLuint> & isTexturedBuffer, const std::string &pathMtl);
+                 std::vector<GLuint> & isTexturedBuffer, const std::string &pathMtl = "");
 
     void loadOBJ(const std::string &pathObj, std::vector<GLfloat> &vertices, std::vector<GLfloat> &normals,
-                 std::vector<GLfloat> &colors, std::vector<GLuint> &indices, const std::string &pathMtl);
+                 std::vector<GLfloat> &colors, std::vector<GLuint> &indices, const std::string &pathMtl = "");
 
     GLuint loadTextureTileBox(const char *texture_file_path);
 };
