@@ -28,7 +28,11 @@ struct Island {
     GLuint indexBufferID;
     GLuint colorBufferID;
     GLuint normalBufferID;
+    GLuint texCoordBufferID;
+    GLuint isTexturedBufferID;
 
+    GLuint textureID;
+    GLuint textureSamplerID;
     GLuint mvpMatrixID;
     GLuint mvpLightMatrixID;
     GLuint lightPositionID;
@@ -40,6 +44,8 @@ struct Island {
     std::vector<GLfloat> normals;
     std::vector<GLfloat> colors;
     std::vector<GLuint> indices;
+    std::vector<GLfloat> textures;
+    std::vector<GLuint> isTextured;
 
     void initialize(glm::vec3, glm::vec3);
 
