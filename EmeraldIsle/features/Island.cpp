@@ -11,8 +11,10 @@ void Island::initialize(glm::vec3 position, glm::vec3 scale) {
     vertices.resize(17298);
     normals.resize(17298);
     colors.resize(17298);
+    textures.resize(11532);
+    isTextured.resize(5766);
     FileLoader loader;
-    loader.loadOBJ("../EmeraldIsle/model/island.obj", vertices, normals,colors,indices,"../EmeraldIsle/model/island.mtl");
+    loader.loadOBJ("../EmeraldIsle/model/island.obj", vertices, normals,colors,indices, textures, isTextured,"../EmeraldIsle/model/island.mtl");
 
     glGenVertexArrays(1, &vertexArrayID);
     glBindVertexArray(vertexArrayID);
@@ -29,6 +31,14 @@ void Island::initialize(glm::vec3 position, glm::vec3 scale) {
     glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
     glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(GLfloat), normals.data(), GL_STATIC_DRAW);
 
+    glGenBuffers(1, &texCoordBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, texCoordBufferID);
+    glBufferData(GL_ARRAY_BUFFER, textures.size() * sizeof(GLfloat), textures.data(), GL_STATIC_DRAW);
+
+    glGenBuffers(1, &isTexturedBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, isTexturedBufferID);
+    glBufferData(GL_ARRAY_BUFFER, isTextured.size() * sizeof(GLuint), isTextured.data(), GL_STATIC_DRAW);
+
     glGenBuffers(1, &indexBufferID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
@@ -42,6 +52,10 @@ void Island::initialize(glm::vec3 position, glm::vec3 scale) {
     if (shadowProgramID == 0) {
         std::cerr << "Erreur : Impossible de charger les shaders 'shadow'" << std::endl;
     }
+
+    // Load a Texture
+    textureID = loader.loadTextureTileBox("../EmeraldIsle/model/sand.jpg");
+    textureSamplerID = glGetUniformLocation(programID, "textureSampler");
 
     mvpMatrixID = glGetUniformLocation(programID, "MVP");
     lightPositionID = glGetUniformLocation(programID, "lightPosition");
@@ -66,11 +80,23 @@ void Island::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glBindBuffer(GL_ARRAY_BUFFER, normalBufferID);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+    glEnableVertexAttribArray(3);
+    glBindBuffer(GL_ARRAY_BUFFER, texCoordBufferID);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glEnableVertexAttribArray(4);
+    glBindBuffer(GL_ARRAY_BUFFER, isTexturedBufferID);
+    glVertexAttribPointer(4, 1, GL_UNSIGNED_INT, GL_FALSE, 0, 0);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, depthTexture);
     glUniform1i(glGetUniformLocation(programID,"shadowTexture"), 0);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glUniform1i(textureSamplerID, 0);
 
     glm::mat4 modelMatrix = glm::mat4();
     // Scale the box along each axis to make it look like a building
@@ -97,6 +123,8 @@ void Island::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
     glBindVertexArray(0);
 }
 
@@ -134,7 +162,9 @@ void Island::cleanup() {
     glDeleteBuffers(1, &vertexBufferID);
     glDeleteBuffers(1, &colorBufferID);
     glDeleteBuffers(1, &indexBufferID);
-    glDeleteVertexArrays(1, &normalBufferID);
+    glDeleteBuffers(1, &normalBufferID);
+    glDeleteBuffers(1, &texCoordBufferID);
+    glDeleteBuffers(1, &isTexturedBufferID);
     glDeleteVertexArrays(1, &vertexArrayID);
     glDeleteProgram(programID);
     glDeleteProgram(shadowProgramID);
