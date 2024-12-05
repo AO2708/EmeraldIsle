@@ -35,7 +35,7 @@ void Island::initialize(glm::vec3 position, glm::vec3 scale) {
 
     programID = LoadShadersFromFile("../EmeraldIsle/shader/island.vert", "../EmeraldIsle/shader/island.frag");
     if (programID == 0) {
-        std::cerr << "Erreur : Impossible de charger les shaders 'tree'" << std::endl;
+        std::cerr << "Erreur : Impossible de charger les shaders 'island'" << std::endl;
     }
 
     shadowProgramID = LoadShadersFromFile("../EmeraldIsle/shader/shadowMapping.vert", "../EmeraldIsle/shader/shadowMapping.frag");

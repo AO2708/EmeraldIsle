@@ -16,6 +16,8 @@
 #include <features/Island.h>
 #include <features/Pannel.h>
 
+#include "features/Sea.h"
+
 static GLFWwindow *window;
 static int windowWidth = 1024;
 static int windowHeight = 768;
@@ -23,7 +25,7 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
 static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 // OpenGL camera view parameters
-static glm::vec3 eye_center(20.0,1.5,-55.0);
+glm::vec3 eye_center(20.0,1.5,-55.0);
 static glm::vec3 lookat(0, 15, 0);
 static glm::vec3 up(0, 1, 0);
 static float FoV = 50.0f;
@@ -252,6 +254,11 @@ int main(void)
 	Island island;
 	island.initialize(glm::vec3(0.0,0.0,0.0), glm::vec3(5.0,5.0,5.0));
 
+	Sea sea;
+	glm::vec3 seaPosition = eye_center;
+	seaPosition.y = 0.0f;
+	sea.initialize(seaPosition, glm::vec3(20.0,20.0,20.0));
+
 	// Camera setup for light
 	glm::mat4 viewMatrixLight, projectionMatrixLight;
 	projectionMatrixLight = glm::perspective(glm::radians(depthFoV), (float)shadowMapWidth / shadowMapHeight, depthNear, depthFar);
@@ -303,6 +310,7 @@ int main(void)
 		axis.render(vp);
 		pannel.render(vp,vpLight);
 		island.render(vp,vpLight);
+		sea.render(vp,vpLight);
 
 		// FPS tracking
 		// Count number of frames over a few seconds and take average
@@ -333,6 +341,7 @@ int main(void)
 	axis.cleanup();
 	island.cleanup();
 	pannel.cleanup();
+	sea.cleanup();
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
