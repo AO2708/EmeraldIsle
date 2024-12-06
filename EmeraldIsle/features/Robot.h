@@ -19,13 +19,20 @@
 
 extern const glm::vec3 lightIntensity;
 extern const glm::vec3 lightPosition;
+extern glm::vec3 eye_center;
 
 struct Robot {
+    glm::vec3 position;
+    glm::vec3 scale;
+    float rotation;
+
     // Attributes
-    GLuint mvpMatrixID;
+    GLuint vpMatrixID;
+    GLuint modelMatrixID;
     GLuint jointMatricesID;
     GLuint lightPositionID;
     GLuint lightIntensityID;
+    GLuint eyeCenterID;
     GLuint programID;
 
     tinygltf::Model model;
@@ -85,7 +92,7 @@ struct Robot {
 
     bool loadModel(tinygltf::Model &, const char *);
 
-    void initialize();
+    void initialize(glm::vec3, glm::vec3, float);
 
     void bindMesh(std::vector<PrimitiveObject> &, tinygltf::Model &, tinygltf::Mesh &);
 

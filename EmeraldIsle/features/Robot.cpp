@@ -314,7 +314,10 @@ bool Robot::loadModel(tinygltf::Model &model, const char *filename) {
 	return res;
 }
 
-void Robot::initialize() {
+void Robot::initialize(glm::vec3 position, glm::vec3 scale, float rotation) {
+	this->position = position;
+	this->scale = scale;
+	this->rotation = rotation;
 	if (!loadModel(model, "../EmeraldIsle/model/robot.gltf")) {
 		return;
 	}
@@ -336,7 +339,9 @@ void Robot::initialize() {
 	}
 
 	// Get a handle for GLSL variables
-	mvpMatrixID = glGetUniformLocation(programID, "MVP");
+	vpMatrixID = glGetUniformLocation(programID, "VP");
+	modelMatrixID = glGetUniformLocation(programID, "modelMatrix");
+	eyeCenterID = glGetUniformLocation(programID, "cameraPosition");
 	lightPositionID = glGetUniformLocation(programID, "lightPosition");
 	lightIntensityID = glGetUniformLocation(programID, "lightIntensity");
 }
@@ -489,8 +494,13 @@ void Robot::render(glm::mat4 cameraMatrix) {
 	glUseProgram(programID);
 
 	// Set camera
-	glm::mat4 mvp = cameraMatrix;
-	glUniformMatrix4fv(mvpMatrixID, 1, GL_FALSE, &mvp[0][0]);
+	glm::mat4 modelMatrix = glm::mat4();
+	modelMatrix = glm::translate(modelMatrix, position);
+	modelMatrix = glm::scale(modelMatrix, scale);
+	modelMatrix = glm::rotate(modelMatrix, rotation, glm::vec3(0, 1, 0));
+
+	glUniformMatrix4fv(vpMatrixID, 1, GL_FALSE, &cameraMatrix[0][0]);
+	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 
 	// -----------------------------------------------------------------
 	// Set animation data for linear blend skinning in shader
@@ -502,6 +512,7 @@ void Robot::render(glm::mat4 cameraMatrix) {
 	// Set light data
 	glUniform3fv(lightPositionID, 1, &lightPosition[0]);
 	glUniform3fv(lightIntensityID, 1, &lightIntensity[0]);
+	glUniform3fv(eyeCenterID, 1, &eye_center[0]);
 
 	// Draw the GLTF model
 	drawModel(primitiveObjects, model);

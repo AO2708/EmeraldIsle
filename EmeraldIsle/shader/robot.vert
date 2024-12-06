@@ -14,7 +14,8 @@ uniform mat4 u_jointMatrix[13];
 out vec3 worldPosition;
 out vec3 worldNormal;
 
-uniform mat4 MVP;
+uniform mat4 VP;
+uniform mat4 modelMatrix;
 
 void main() {
     mat4 skinMatrix =
@@ -24,11 +25,11 @@ void main() {
     weight.w * u_jointMatrix[int(joint.w)];
 
     // Transform vertex
-    gl_Position = MVP * skinMatrix * vec4(vertexPosition, 1.0);
+    gl_Position = VP * modelMatrix * skinMatrix * vec4(vertexPosition, 1.0);
 
     // Transform to world-space for lighting calculations
-    worldPosition = vec3(skinMatrix * vec4(vertexPosition, 1.0));
+    worldPosition = vec3(modelMatrix * skinMatrix * vec4(vertexPosition, 1.0));
 
     // World-space geometry
-    worldNormal = mat3(transpose(inverse(skinMatrix))) * vertexNormal;
+    worldNormal = mat3(transpose(inverse(modelMatrix * skinMatrix))) * vertexNormal;
 }

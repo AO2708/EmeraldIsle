@@ -243,7 +243,7 @@ int main(void)
 	sea.initialize(seaPosition, glm::vec3(20.0,20.0,20.0));
 
 	Robot robot;
-	robot.initialize();
+	robot.initialize(glm::vec3(-14.0,0.0,-46.0), glm::vec3(0.5,0.5,0.5), glm::radians(90.0f));
 
 	// Camera setup for light
 	glm::mat4 viewMatrixLight, projectionMatrixLight;

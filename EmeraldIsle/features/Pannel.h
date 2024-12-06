@@ -49,7 +49,7 @@ struct Pannel {
     std::vector<GLfloat> textures;
     std::vector<GLuint> isTextured;
 
-    void initialize(glm::vec3, glm::vec3, float rotation);
+    void initialize(glm::vec3, glm::vec3, float);
 
     void render(glm::mat4, glm::mat4);
 
