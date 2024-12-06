@@ -3,6 +3,22 @@
 //
 
 #include "FileLoader.h"
+#include <stb_image.h>
+#include <stb_image_write.h>
+
+void FileLoader::saveDepthTexture(GLuint fbo, std::string filename, int width, int height) {
+    int channels = 3;
+
+    std::vector<float> depth(width * height);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glReadBuffer(GL_DEPTH_COMPONENT);
+    glReadPixels(0, 0, width, height, GL_DEPTH_COMPONENT, GL_FLOAT, depth.data());
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    std::vector<unsigned char> img(width * height * 3);
+    for (int i = 0; i < width * height; ++i) img[3*i] = img[3*i+1] = img[3*i+2] = depth[i] * 255;
+    stbi_write_png(filename.c_str(), width, height, channels, img.data(), width * channels);
+}
 
 void FileLoader::loadMTL(const std::string &path,std::unordered_map<std::string,Material> &materials) {
     std::cout << "MTL FILE LOADING " << path << std::endl;

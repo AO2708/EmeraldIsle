@@ -5,7 +5,6 @@
 #ifndef FILELOADER_H
 #define FILELOADER_H
 
-#include <../stb/stb_image.h>
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -28,6 +27,7 @@ struct Material {
 };
 
 struct FileLoader {
+    void saveDepthTexture(GLuint, std::string, int, int);
 
     void loadMTL(const std::string &, std::unordered_map<std::string, Material> &materials);
 

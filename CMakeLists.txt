@@ -26,6 +26,7 @@ add_executable(main
         EmeraldIsle/features/Island.cpp
         EmeraldIsle/features/Pannel.cpp
         EmeraldIsle/features/Sea.cpp
+        EmeraldIsle/features/Robot.cpp
 )
 
 target_link_libraries(main

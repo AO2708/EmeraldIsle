@@ -47,7 +47,7 @@ void main() {
 
     vec3 gamma = vec3(2.2);
     // Approximation : All the surface receive the same amount of energy
-    float distance = dot(lightPosition,lightPosition);
+    float distance = 15000;
     float lambTerm = lambertianTerm(normalTexture);
     float attenuation = 0.1 / (4.0 * 3.14159 * distance);
     vec3 diffuse = (lightIntensity*attenuation*lambTerm) * color;
