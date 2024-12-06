@@ -6,17 +6,17 @@
 #include <render/shader.h>
 
 #include <iostream>
-#define _USE_MATH_DEFINES
+#include <iomanip>
+
+#define TINYGLTF_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include <iomanip>
-#include <../stb/stb_image_write.h>
 
 #include <features/Forest.h>
 #include <features/Island.h>
 #include <features/Pannel.h>
-
-#include "features/Sea.h"
+#include <features/Robot.h>
+#include <features/Sea.h>
 
 static GLFWwindow *window;
 static int windowWidth = 1024;
@@ -56,26 +56,9 @@ GLuint fbo;
 GLuint depthTexture;
 static bool saveDepth = true;
 
-static void saveDepthTexture(GLuint fbo, std::string filename) {
-	int width = shadowMapWidth;
-	int height = shadowMapHeight;
-	if (shadowMapWidth == 0 || shadowMapHeight == 0) {
-		width = windowWidth;
-		height = windowHeight;
-	}
-	int channels = 3;
-
-	std::vector<float> depth(width * height);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glReadBuffer(GL_DEPTH_COMPONENT);
-	glReadPixels(0, 0, width, height, GL_DEPTH_COMPONENT, GL_FLOAT, depth.data());
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	std::vector<unsigned char> img(width * height * 3);
-	for (int i = 0; i < width * height; ++i) img[3*i] = img[3*i+1] = img[3*i+2] = depth[i] * 255;
-	stbi_write_png(filename.c_str(), width, height, channels, img.data(), width * channels);
-}
-
+// Animation
+static bool playAnimation = true;
+static float playbackSpeed = 2.0f;
 
 struct AxisXYZ {
     // A structure for visualizing the global 3D coordinate system
@@ -259,6 +242,9 @@ int main(void)
 	seaPosition.y = 0.0f;
 	sea.initialize(seaPosition, glm::vec3(20.0,20.0,20.0));
 
+	Robot robot;
+	robot.initialize();
+
 	// Camera setup for light
 	glm::mat4 viewMatrixLight, projectionMatrixLight;
 	projectionMatrixLight = glm::perspective(glm::radians(depthFoV), (float)shadowMapWidth / shadowMapHeight, depthNear, depthFar);
@@ -287,8 +273,9 @@ int main(void)
 		island.renderShadow(vpLight);
 		pannel.renderShadow(vpLight);
 		if (saveDepth) {
+			FileLoader fileloader;
 			std::string filename = "../EmeraldIsle/depth_camera.png";
-			saveDepthTexture(fbo, filename);
+			fileloader.saveDepthTexture(fbo, filename, shadowMapWidth, shadowMapHeight);
 			std::cout << "Depth texture saved to " << filename << std::endl;
 			saveDepth = false;
 		}
@@ -302,6 +289,11 @@ int main(void)
 		float deltaTime = float(currentTime - lastTime);
 		lastTime = currentTime;
 
+		if (playAnimation) {
+			time += deltaTime * playbackSpeed;
+			robot.update(time);
+		}
+
 		viewMatrix = glm::lookAt(eye_center, lookat, up);
 		glm::mat4 vp = projectionMatrix * viewMatrix;
 
@@ -311,6 +303,7 @@ int main(void)
 		pannel.render(vp,vpLight);
 		island.render(vp,vpLight);
 		sea.render(vp,vpLight);
+		robot.render(vp);
 
 		// FPS tracking
 		// Count number of frames over a few seconds and take average
