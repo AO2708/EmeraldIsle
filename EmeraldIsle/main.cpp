@@ -54,7 +54,7 @@ static float depthNear = 100.0f;
 static float depthFar = 500.0f;
 GLuint fbo;
 GLuint depthTexture;
-static bool saveDepth = false;
+static bool saveDepth = true;
 
 static void saveDepthTexture(GLuint fbo, std::string filename) {
 	int width = shadowMapWidth;

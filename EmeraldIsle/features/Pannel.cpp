@@ -93,7 +93,7 @@ void Pannel::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, depthTexture);
-    glUniform1i(glGetUniformLocation(programID,"shadowTexture"), 0);
+    glUniform1i(glGetUniformLocation(programID,"shadowTexture"), 1);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textureID);
