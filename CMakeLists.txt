@@ -21,12 +21,12 @@ include_directories(
 add_executable(main
         EmeraldIsle/main.cpp
         EmeraldIsle/render/shader.cpp
-        EmeraldIsle/features/Forest.cpp
-        EmeraldIsle/loader/FileLoader.cpp
-        EmeraldIsle/features/Island.cpp
-        EmeraldIsle/features/Pannel.cpp
-        EmeraldIsle/features/Sea.cpp
-        EmeraldIsle/features/Robot.cpp
+        EmeraldIsle/feature/Forest.cpp
+        EmeraldIsle/fileTool/FileHandler.cpp
+        EmeraldIsle/feature/Island.cpp
+        EmeraldIsle/feature/Pannel.cpp
+        EmeraldIsle/feature/Sea.cpp
+        EmeraldIsle/feature/Robot.cpp
 )
 
 target_link_libraries(main

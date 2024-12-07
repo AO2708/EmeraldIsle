@@ -12,11 +12,11 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 
-#include <features/Forest.h>
-#include <features/Island.h>
-#include <features/Pannel.h>
-#include <features/Robot.h>
-#include <features/Sea.h>
+#include <feature/Forest.h>
+#include <feature/Island.h>
+#include <feature/Pannel.h>
+#include <feature/Robot.h>
+#include <feature/Sea.h>
 
 static GLFWwindow *window;
 static int windowWidth = 1024;
@@ -175,9 +175,9 @@ int main(void)
 		pannel.renderShadow(vpLight);
 		robot.renderShadow(vpLight);
 		if (saveDepth) {
-			FileLoader fileloader;
+			FileHandler fileSaver;
 			std::string filename = "../EmeraldIsle/depth_camera.png";
-			fileloader.saveDepthTexture(fbo, filename, shadowMapWidth, shadowMapHeight);
+			fileSaver.saveDepthTexture(fbo, filename, shadowMapWidth, shadowMapHeight);
 			std::cout << "Depth texture saved to " << filename << std::endl;
 			saveDepth = false;
 		}
