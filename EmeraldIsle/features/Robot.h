@@ -20,6 +20,7 @@
 extern const glm::vec3 lightIntensity;
 extern const glm::vec3 lightPosition;
 extern glm::vec3 eye_center;
+extern GLuint depthTexture;
 
 struct Robot {
     glm::vec3 position;
@@ -34,6 +35,8 @@ struct Robot {
     GLuint lightIntensityID;
     GLuint eyeCenterID;
     GLuint programID;
+    GLuint shadowProgramID;
+    GLuint vpLightMatrixID;
 
     tinygltf::Model model;
 
@@ -108,7 +111,9 @@ struct Robot {
 
     void drawModel(const std::vector<PrimitiveObject>&, tinygltf::Model &);
 
-    void render(glm::mat4);
+    void render(glm::mat4, glm::mat4);
+
+    void renderShadow(glm::mat4);
 
     void cleanup();
 };

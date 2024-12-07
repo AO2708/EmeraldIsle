@@ -2,12 +2,29 @@
 
 in vec3 worldPosition;
 in vec3 worldNormal;
+in vec4 fragPosLightSpace;
 
 out vec3 finalColor;
 
 uniform vec3 lightPosition;
 uniform vec3 lightIntensity;
 uniform vec3 cameraPosition;
+uniform sampler2D shadowTexture;
+
+float shadowCalculation() {
+    vec3 projCoords = fragPosLightSpace.xyz/fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+    float shadow;
+    if(projCoords.x < 0 || projCoords.x > 1 || projCoords.y < 0 || projCoords.y > 1 || projCoords.z < 0 || projCoords.z > 1) {
+        shadow = 1.0;
+    } else {
+        // Shadow
+        float existingDepth = texture(shadowTexture, projCoords.xy).r;
+        float depth = projCoords.z;
+        shadow = (depth >= existingDepth + 1e-3) ? 0.2 : 1.0;
+    }
+    return shadow;
+}
 
 vec3 blinnPhong() {
     // Sun rays are parallel
@@ -21,6 +38,7 @@ vec3 blinnPhong() {
 
 void main()
 {
+    float shadow = shadowCalculation();
     // Lighting
     vec3 lightDir = normalize(lightPosition);
     float lightDist = dot(lightDir, lightDir);
@@ -36,4 +54,5 @@ void main()
 
     // Gamma correction
     finalColor = pow(finalColor, vec3(1.0 / 2.2));
+    finalColor *= shadow;
 }

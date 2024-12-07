@@ -337,6 +337,11 @@ void Robot::initialize(glm::vec3 position, glm::vec3 scale, float rotation) {
 	{
 		std::cerr << "Failed to load shaders." << std::endl;
 	}
+	shadowProgramID = LoadShadersFromFile("../EmeraldIsle/shader/shadowMappingRobot.vert", "../EmeraldIsle/shader/shadowMapping.frag");
+	if (shadowProgramID == 0)
+	{
+		std::cerr << "Failed to load shaders." << std::endl;
+	}
 
 	// Get a handle for GLSL variables
 	vpMatrixID = glGetUniformLocation(programID, "VP");
@@ -490,7 +495,7 @@ void Robot::drawModel(const std::vector<PrimitiveObject>& primitiveObjects,
 	}
 }
 
-void Robot::render(glm::mat4 cameraMatrix) {
+void Robot::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
 	glUseProgram(programID);
 
 	// Set camera
@@ -513,6 +518,32 @@ void Robot::render(glm::mat4 cameraMatrix) {
 	glUniform3fv(lightPositionID, 1, &lightPosition[0]);
 	glUniform3fv(lightIntensityID, 1, &lightIntensity[0]);
 	glUniform3fv(eyeCenterID, 1, &eye_center[0]);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depthTexture);
+	glUniform1i(glGetUniformLocation(programID,"shadowTexture"), 0);
+
+	glUniformMatrix4fv(glGetUniformLocation(programID, "VPLight"), 1, GL_FALSE, &lightMatrix[0][0]);
+
+	// Draw the GLTF model
+	drawModel(primitiveObjects, model);
+}
+
+void Robot::renderShadow(glm::mat4 lightMatrix) {
+	glUseProgram(shadowProgramID);
+
+	// Set camera
+	glm::mat4 modelMatrix = glm::mat4();
+	modelMatrix = glm::translate(modelMatrix, position);
+	modelMatrix = glm::scale(modelMatrix, scale);
+	modelMatrix = glm::rotate(modelMatrix, rotation, glm::vec3(0, 1, 0));
+
+	vpLightMatrixID = glGetUniformLocation(shadowProgramID, "vpLightMatrix");
+	glUniformMatrix4fv(vpLightMatrixID, 1, GL_FALSE, &lightMatrix[0][0]);
+	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
+
+	jointMatricesID = glGetUniformLocation(shadowProgramID,"u_jointMatrix");
+	glUniformMatrix4fv(jointMatricesID, skinObjects[0].jointMatrices.size(), GL_FALSE, &skinObjects[0].jointMatrices[0][0][0]);
 
 	// Draw the GLTF model
 	drawModel(primitiveObjects, model);

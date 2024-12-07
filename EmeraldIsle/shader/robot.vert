@@ -13,8 +13,10 @@ uniform mat4 u_jointMatrix[13];
 // Output data, to be interpolated for each fragment
 out vec3 worldPosition;
 out vec3 worldNormal;
+out vec4 fragPosLightSpace;
 
 uniform mat4 VP;
+uniform mat4 VPLight;
 uniform mat4 modelMatrix;
 
 void main() {
@@ -26,6 +28,7 @@ void main() {
 
     // Transform vertex
     gl_Position = VP * modelMatrix * skinMatrix * vec4(vertexPosition, 1.0);
+    fragPosLightSpace = VPLight * modelMatrix * skinMatrix * vec4(vertexPosition, 1.0);
 
     // Transform to world-space for lighting calculations
     worldPosition = vec3(modelMatrix * skinMatrix * vec4(vertexPosition, 1.0));
