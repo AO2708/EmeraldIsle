@@ -54,7 +54,7 @@ void Island::initialize(glm::vec3 position, glm::vec3 scale) {
     }
 
     // Load a Texture
-    textureID = loader.loadTextureTileBox("../EmeraldIsle/model/sand.jpg");
+    textureID = loader.loadTextureTileBox("../EmeraldIsle/texture/sand.jpg");
     textureSamplerID = glGetUniformLocation(programID, "textureSampler");
 
     mvpMatrixID = glGetUniformLocation(programID, "MVP");

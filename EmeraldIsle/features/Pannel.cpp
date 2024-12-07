@@ -54,7 +54,7 @@ void Pannel::initialize(glm::vec3 position, glm::vec3 scale, float rotation) {
     }
 
     // Load a Texture
-    textureID = loader.loadTextureTileBox("../EmeraldIsle/model/radioPannel.png");
+    textureID = loader.loadTextureTileBox("../EmeraldIsle/texture/radioPannel.png");
     textureSamplerID = glGetUniformLocation(programID, "textureSampler");
 
     vpMatrixID = glGetUniformLocation(programID, "VP");

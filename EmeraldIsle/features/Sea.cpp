@@ -47,7 +47,7 @@ void Sea::initialize(glm::vec3 position, glm::vec3 scale) {
     }
 
     // Load a Texture
-    textureID = loader.loadTextureTileBox("../EmeraldIsle/model/normalMappingSea.jpg");
+    textureID = loader.loadTextureTileBox("../EmeraldIsle/texture/normalMappingSea.jpg");
     textureSamplerID = glGetUniformLocation(programID, "normalMap");
 
     vpMatrixID = glGetUniformLocation(programID, "VP");
