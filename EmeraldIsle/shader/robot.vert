@@ -14,6 +14,7 @@ uniform mat4 u_jointMatrix[13];
 out vec3 worldPosition;
 out vec3 worldNormal;
 out vec4 fragPosLightSpace;
+out vec2 uv;
 
 uniform mat4 VP;
 uniform mat4 VPLight;
@@ -35,4 +36,6 @@ void main() {
 
     // World-space geometry
     worldNormal = mat3(transpose(inverse(modelMatrix * skinMatrix))) * vertexNormal;
+
+    uv = vertexUV;
 }
