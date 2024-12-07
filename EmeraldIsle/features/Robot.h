@@ -19,7 +19,6 @@
 
 extern const glm::vec3 lightIntensity;
 extern const glm::vec3 lightPosition;
-extern glm::vec3 eye_center;
 extern GLuint depthTexture;
 
 struct Robot {
@@ -28,12 +27,13 @@ struct Robot {
     float rotation;
 
     // Attributes
+    GLuint textureID;
+    GLuint textureSamplerID;
     GLuint vpMatrixID;
     GLuint modelMatrixID;
     GLuint jointMatricesID;
     GLuint lightPositionID;
     GLuint lightIntensityID;
-    GLuint eyeCenterID;
     GLuint programID;
     GLuint shadowProgramID;
     GLuint vpLightMatrixID;

@@ -4,6 +4,8 @@
 
 #include "Robot.h"
 
+#include <loader/FileLoader.h>
+
 glm::mat4 Robot::getNodeTransform(const tinygltf::Node& node) {
 	glm::mat4 transform(1.0f);
 
@@ -342,11 +344,14 @@ void Robot::initialize(glm::vec3 position, glm::vec3 scale, float rotation) {
 	{
 		std::cerr << "Failed to load shaders." << std::endl;
 	}
+	// Load a Texture
+	FileLoader loader;
+	textureID = loader.loadTextureTileBox("../EmeraldIsle/texture/rustedMetal.jpg");
+	textureSamplerID = glGetUniformLocation(programID, "textureSampler");
 
 	// Get a handle for GLSL variables
 	vpMatrixID = glGetUniformLocation(programID, "VP");
 	modelMatrixID = glGetUniformLocation(programID, "modelMatrix");
-	eyeCenterID = glGetUniformLocation(programID, "cameraPosition");
 	lightPositionID = glGetUniformLocation(programID, "lightPosition");
 	lightIntensityID = glGetUniformLocation(programID, "lightIntensity");
 }
@@ -517,11 +522,14 @@ void Robot::render(glm::mat4 cameraMatrix, glm::mat4 lightMatrix) {
 	// Set light data
 	glUniform3fv(lightPositionID, 1, &lightPosition[0]);
 	glUniform3fv(lightIntensityID, 1, &lightIntensity[0]);
-	glUniform3fv(eyeCenterID, 1, &eye_center[0]);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, depthTexture);
+	glUniform1i(glGetUniformLocation(programID,"shadowTexture"), 1);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glUniform1i(glGetUniformLocation(programID,"shadowTexture"), 0);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glUniform1i(textureSamplerID, 0);
 
 	glUniformMatrix4fv(glGetUniformLocation(programID, "VPLight"), 1, GL_FALSE, &lightMatrix[0][0]);
 
