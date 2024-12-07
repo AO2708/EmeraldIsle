@@ -54,7 +54,7 @@ static float depthNear = 70.0f;
 static float depthFar = 500.0f;
 GLuint fbo;
 GLuint depthTexture;
-static bool saveDepth = true;
+static bool saveDepth = false;
 
 // Animation
 static bool playAnimation = true;
