@@ -57,4 +57,4 @@ Distributed under the MIT License. See [LICENSE.txt][license] for more informati
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-[license]: LICENSE.txt
+[license]: LICENSE
